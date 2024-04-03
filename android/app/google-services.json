@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "79530601686",
+    "project_id": "applenses-139e9",
+    "storage_bucket": "applenses-139e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79530601686:android:f18b43b2f4fd698fe92d77",
+        "android_client_info": {
+          "package_name": "com.example.app_lenses_commerce"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVUd2kKAM4GljEP2T4hxBD-l3YPfKO9WM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
