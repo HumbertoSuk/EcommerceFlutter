@@ -19,7 +19,7 @@ class AppTheme {
 
   AppTheme({
     this.selectedColor = 0,
-    this.isDarkMode = false,
+    this.isDarkMode = true,
   }) : assert(selectedColor >= 0 && selectedColor < colorList.length,
             'La selección de color no cumple con el rango de 0-${colorList.length - 1}');
 
