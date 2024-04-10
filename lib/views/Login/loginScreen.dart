@@ -226,3 +226,138 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 }
+
+/*
+Prueba este codigo, habilitando este y comentando el anterior,
+creeé una clase llamada login_controller para separarlo.
+import 'package:flutter/material.dart';
+import 'package:app_lenses_commerce/presentation/widgets/slideMenu/slide_menu.dart';
+import 'login_controller.dart'; // Importamos el controlador
+
+class LoginScreen extends StatelessWidget {
+  static const String nameScreen = 'LoginScreen';
+
+  final LoginController _controller = LoginController(); // Instanciamos el controlador
+
+  LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final scaffoldKey = GlobalKey<ScaffoldState>();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login Vision plus'),
+      ),
+      drawer: SideMenu(
+        scaffoldKey: scaffoldKey,
+      ), // Menú lateral
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildLogo(),
+            const SizedBox(height: 20),
+            _buildTextField(
+              hintText: 'Correo Electrónico',
+              obscureText: false,
+              controller: _controller.emailController,
+              onChanged: (_) => _controller.checkFields(),
+              errorText: _controller.isEmailValid ? null : 'Correo electrónico inválido',
+            ),
+            const SizedBox(height: 20),
+            _buildTextField(
+              hintText: 'Contraseña',
+              obscureText: !_controller.isPasswordVisible,
+              controller: _controller.passwordController,
+              onChanged: (_) => _controller.checkFields(),
+              errorText: _controller._isPasswordValid(_controller.passwordController.text)
+                  ? null
+                  : 'Ingrese Contraseña',
+            ),
+            const SizedBox(height: 5),
+            _buildPasswordVisibilityButton(context),
+            const SizedBox(height: 20),
+            _buildLoginButton(context),
+            const SizedBox(height: 10),
+            _buildForgotPasswordButton(context),
+            const SizedBox(height: 10),
+            _buildRegisterButton(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Image.asset(
+      'assets/images/logo.png',
+      width: 150,
+      height: 150,
+    );
+  }
+
+  Widget _buildTextField({
+    required String hintText,
+    required bool obscureText,
+    required TextEditingController controller,
+    required ValueChanged<String> onChanged,
+    String? errorText,
+  }) {
+    return TextField(
+      controller: controller,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        hintText: hintText,
+        errorText: errorText,
+      ),
+      textAlign: TextAlign.center,
+      obscureText: obscureText,
+    );
+  }
+
+  Widget _buildPasswordVisibilityButton(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        _controller.isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+      ),
+      onPressed: _controller.togglePasswordVisibility,
+    );
+  }
+
+  Widget _buildLoginButton(BuildContext context) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _controller.isFilled,
+      builder: (context, filled, _) {
+        return ElevatedButton(
+          onPressed: filled
+              ? () {
+                  _controller.signInWithEmailAndPassword(context);
+                }
+              : null,
+          child: const Text('Iniciar Sesión'),
+        );
+      },
+    );
+  }
+
+  Widget _buildForgotPasswordButton(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        GoRouter.of(context).go('/ForgotPasswordScreen');
+      },
+      child: const Text('¿Olvidaste tu contraseña?'),
+    );
+  }
+
+  Widget _buildRegisterButton(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        GoRouter.of(context).go('/SignUp');
+      },
+      child: const Text('No tienes cuenta? Regístrate (≧◡≦) ♡'),
+    );
+  }
+}
+
+*/
