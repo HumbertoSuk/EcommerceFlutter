@@ -1,7 +1,6 @@
+import 'package:app_lenses_commerce/controller/signup_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:email_validator/email_validator.dart';
-import 'package:go_router/go_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app_lenses_commerce/controllers/signup_controller.dart';
 
 class RegisterScreen extends StatelessWidget {
   static const String nameScreen = 'RegisterScreen';
@@ -9,12 +8,14 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RegisterForm();
+    return RegisterForm(controller: SignupController());
   }
 }
 
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({Key? key}) : super(key: key);
+  final SignupController controller;
+
+  const RegisterForm({Key? key, required this.controller}) : super(key: key);
 
   @override
   _RegisterFormState createState() => _RegisterFormState();
@@ -91,36 +92,12 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   Future<void> _register() async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-
-      await userCredential.user!.updateDisplayName(nameController.text);
-
-      await userCredential.user!.sendEmailVerification();
-
-      // Registro exitoso
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-              'Registro exitoso. Se ha enviado un correo de verificación.'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-
-      GoRouter.of(context).go('/');
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error durante el registro: $e'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-      print('Error during registration: $e');
-    }
+    widget.controller.register(
+      nameController.text,
+      emailController.text,
+      passwordController.text,
+      context,
+    );
   }
 
   @override
@@ -131,7 +108,7 @@ class _RegisterFormState extends State<RegisterForm> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            GoRouter.of(context).go('/');
+            Navigator.of(context).pop();
           },
         ),
       ),
