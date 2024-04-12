@@ -1,7 +1,6 @@
+import 'package:app_lenses_commerce/controller/forgot_pass_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:email_validator/email_validator.dart';
-import 'package:go_router/go_router.dart';
+import 'package:app_lenses_commerce/controllers/forgot_password_controller.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   static const String nameScreen = 'ForgotPasswordScreen';
@@ -23,14 +22,17 @@ class ForgotPasswordScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
-        child: ForgotPasswordForm(),
+        child: ForgotPasswordForm(controller: ForgotPasswordController()),
       ),
     );
   }
 }
 
 class ForgotPasswordForm extends StatefulWidget {
-  const ForgotPasswordForm({Key? key}) : super(key: key);
+  final ForgotPasswordController controller;
+
+  const ForgotPasswordForm({Key? key, required this.controller})
+      : super(key: key);
 
   @override
   _ForgotPasswordFormState createState() => _ForgotPasswordFormState();
@@ -38,7 +40,6 @@ class ForgotPasswordForm extends StatefulWidget {
 
 class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   final TextEditingController emailController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool isEmailValid = true;
@@ -55,31 +56,10 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
     });
   }
 
-  Future<void> _resetPassword(BuildContext context) async {
+  void _resetPassword(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      try {
-        await _auth.sendPasswordResetEmail(email: emailController.text);
-        _showMessage(
-            context, 'Se ha enviado un correo para restablecer la contraseña');
-        GoRouter.of(context).go('/');
-      } catch (e) {
-        _showError(context, 'Error al enviar el correo: $e');
-      }
+      widget.controller.resetPassword(emailController.text, context);
     }
-  }
-
-  void _showMessage(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message),
-      duration: Duration(seconds: 3),
-    ));
-  }
-
-  void _showError(BuildContext context, String errorMessage) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(errorMessage),
-      duration: Duration(seconds: 3),
-    ));
   }
 
   @override
