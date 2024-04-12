@@ -1,12 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/config/menu/menu_item.dart';
 import 'package:app_lenses_commerce/presentation/widgets/slideMenu/slide_menu.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app_lenses_commerce/controllers/home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String nameScreen = 'HomeScreen';
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,8 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
-              _showLogoutConfirmationDialog(context);
+              HomeController.logout(
+                  context); // Llama al método logout del controlador
             },
           ),
         ],
@@ -34,37 +35,6 @@ class HomeScreen extends StatelessWidget {
   Widget menuList(BuildContext context, int index) {
     final menuItem = appMenuItems[index];
     return _CustomListTitle(menuItem: menuItem);
-  }
-
-  void _showLogoutConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Cerrar sesión'),
-        content: Text('¿Estás seguro de que quieres cerrar sesión?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              try {
-                await FirebaseAuth.instance.signOut();
-                context.go('/');
-              } catch (e) {
-                print('Error al cerrar sesión: $e');
-                // Manejar el error si ocurre
-              }
-            },
-            child: const Text('Cerrar sesión'),
-          ),
-        ],
-      ),
-    );
   }
 }
 
