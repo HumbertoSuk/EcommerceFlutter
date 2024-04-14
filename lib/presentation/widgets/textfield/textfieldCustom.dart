@@ -6,6 +6,7 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
   final String? errorText;
+  final Widget? suffixIcon; // Nuevo atributo para el icono al final
 
   const CustomTextField({
     Key? key,
@@ -14,6 +15,7 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     required this.onChanged,
     this.errorText,
+    this.suffixIcon, // Agregar el nuevo atributo al constructor
   }) : super(key: key);
 
   @override
@@ -24,6 +26,7 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         errorText: errorText,
+        suffixIcon: suffixIcon, // Utilizar el atributo suffixIcon
       ),
       textAlign: TextAlign.center,
       obscureText: obscureText ?? false,

@@ -1,80 +1,84 @@
 import 'package:app_lenses_commerce/models/userModel.dart';
+import 'package:app_lenses_commerce/presentation/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginController {
+  // Método asincrónico para iniciar sesión con correo electrónico y contraseña.
   Future<void> signInWithEmailAndPassword({
     required BuildContext context,
     required String email,
     required String password,
   }) async {
+    // Capturamos el BuildContext en una variable local
+    final scaffoldContext = context;
+
     try {
+      // Login
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      if (userCredential.user != null && userCredential.user!.emailVerified) {
-        final userModel = UserModel.fromFirebaseUser(userCredential.user!);
+      // Se crea un modelo de usuario a partir del usuario de Firebase
+      final userModel = UserModel.fromFirebaseUser(userCredential.user!);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('¡Bienvenido, ${userModel.email}!'),
-            duration: Duration(seconds: 3),
-          ),
+      // Verifica si el usuario está autenticado y su correo electrónico está verificado
+      if (userModel.isAuthenticated() && userModel.isEmailVerified()) {
+        // Se muestra un mensaje de bienvenida con el nombre del usuario
+        SnackBarUtils.showCustomSnackBar(
+          scaffoldContext,
+          '¡Bienvenido, ${userModel.name ?? userModel.email}!',
+          duration: const Duration(seconds: 5),
         );
-        GoRouter.of(context).go('/Home');
+
+        GoRouter.of(scaffoldContext).go('/Home');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-                'Por favor, verifica tu correo electrónico para iniciar sesión.'),
-            duration: Duration(seconds: 3),
-          ),
+        // Si el usuario no está autenticado o su correo electrónico no está verificado,
+        SnackBarUtils.showCustomSnackBar(
+          scaffoldContext,
+          'Por favor, verifica tu correo electrónico para iniciar sesión.',
+          duration: const Duration(seconds: 3),
         );
       }
     } on FirebaseAuthException catch (e) {
       final errorMessage = e.toString();
       if (errorMessage.contains('credential is incorrect')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Contraseña o usuario incorrectos.'),
-            duration: Duration(seconds: 3),
-          ),
+        // Si las credenciales son incorrectas, se muestra un mensaje de error
+        SnackBarUtils.showCustomSnackBar(
+          scaffoldContext,
+          'Contraseña o usuario incorrectos.',
+          duration: const Duration(seconds: 3),
         );
       } else if (errorMessage
           .contains('blocked all requests from this device')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-                'El dispositivo fue bloqueado por actividad sospechosa, inténtelo más tarde o intente cambiar de contraseña'),
-            duration: Duration(seconds: 3),
-          ),
+        // Si las solicitudes están bloqueadas desde este dispositivo, se muestra un mensaje indicando que el dispositivo ha sido bloqueado
+        SnackBarUtils.showCustomSnackBar(
+          scaffoldContext,
+          'El dispositivo fue bloqueado por actividad sospechosa, inténtelo más tarde o intente cambiar de contraseña',
+          duration: const Duration(seconds: 3),
         );
       } else if (errorMessage.contains('email_not_verified')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-                'Por favor, verifica tu correo electrónico para iniciar sesión.'),
-            duration: Duration(seconds: 3),
-          ),
+        SnackBarUtils.showCustomSnackBar(
+          scaffoldContext,
+          'Por favor, verifica tu correo electrónico para iniciar sesión.',
+          duration: const Duration(seconds: 3),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error al iniciar sesión: $e'),
-            duration: Duration(seconds: 3),
-          ),
+        SnackBarUtils.showCustomSnackBar(
+          scaffoldContext,
+          'Error al iniciar sesión: $e',
+          duration: const Duration(seconds: 3),
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al iniciar sesión: $e'),
-          duration: Duration(seconds: 3),
-        ),
+      // Manejo de errores genéricos
+      SnackBarUtils.showCustomSnackBar(
+        scaffoldContext,
+        'Error al iniciar sesión: $e',
+        duration: const Duration(seconds: 3),
       );
     }
   }

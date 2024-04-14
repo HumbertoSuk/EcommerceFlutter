@@ -11,12 +11,21 @@ class LoginFormState extends StatefulWidget {
   _LoginFormState createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginFormState> {
+class _LoginFormState extends State<LoginFormState> with ValidationMixin {
+  // Controladores de texto
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  // Notifier para ver si esta lleno los campos
   final ValueNotifier<bool> isFilled = ValueNotifier<bool>(false);
+
+  // Visibilidad del pass
   bool isPasswordVisible = false;
+
   final LoginController _loginController = LoginController();
+
+  String? emailErrorText; // ErrorText para el correo electrónico
+  String? passwordErrorText; // ErrorText para la contraseña
 
   @override
   void dispose() {
@@ -34,37 +43,44 @@ class _LoginFormState extends State<LoginFormState> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            LogoWidget(
+            // Logo de la aplicación.
+            const LogoWidget(
               width: 150,
               height: 150,
               imagePath: 'assets/images/logo.png',
             ),
             const SizedBox(height: 20),
+
+            // Campo de texto para el correo electrónico.
             CustomTextField(
               hintText: 'Correo Electrónico',
               obscureText: false,
               controller: emailController,
               onChanged: (_) => _checkFields(),
-              errorText: Validations.isEmailValid(emailController.text)
-                  ? null
-                  : 'Correo electrónico inválido',
+              // Validación del correo electrónico.
+              errorText: emailErrorText,
             ),
             const SizedBox(height: 20),
+
+            // Campo de texto para la contraseña.
             CustomTextField(
               hintText: 'Contraseña',
               obscureText: !isPasswordVisible,
               controller: passwordController,
               onChanged: (_) => _checkFields(),
-              errorText: Validations.isPasswordValid(passwordController.text)
-                  ? null
-                  : 'Ingrese Contraseña',
+              // Validación de la contraseña.
+              errorText: passwordErrorText,
             ),
             const SizedBox(height: 5),
+
+            // Botón para cambiar la visibilidad de la contraseña.
             PasswordVisibilityButton(
               isPasswordVisible: isPasswordVisible,
               onPressed: _togglePasswordVisibility,
             ),
             const SizedBox(height: 20),
+
+            // Botón para iniciar sesión.
             CustomButton(
               text: 'Iniciar Sesión',
               onPressed: isFilled.value
@@ -95,14 +111,22 @@ class _LoginFormState extends State<LoginFormState> {
     );
   }
 
+  //Verificar campos de texto
   void _checkFields() {
-    final isValidEmail = Validations.isEmailValid(emailController.text);
-    final isValidPassword =
-        Validations.isPasswordValid(passwordController.text);
-    final isEmailNotEmpty = emailController.text.isNotEmpty;
-    final isPasswordNotEmpty = passwordController.text.isNotEmpty;
-
     setState(() {
+      emailErrorText = isEmailValid(emailController.text)
+          ? null
+          : 'Correo electrónico inválido';
+
+      passwordErrorText = isPasswordValid(passwordController.text)
+          ? null
+          : 'La contraseña no puede estar vacia';
+
+      final isValidEmail = emailErrorText == null;
+      final isValidPassword = passwordErrorText == null;
+      final isEmailNotEmpty = emailController.text.isNotEmpty;
+      final isPasswordNotEmpty = passwordController.text.isNotEmpty;
+
       isFilled.value = isValidEmail &&
           isValidPassword &&
           isEmailNotEmpty &&
@@ -110,6 +134,7 @@ class _LoginFormState extends State<LoginFormState> {
     });
   }
 
+  // Método para alternar la visibilidad de la contraseña.
   void _togglePasswordVisibility() {
     setState(() {
       isPasswordVisible = !isPasswordVisible;

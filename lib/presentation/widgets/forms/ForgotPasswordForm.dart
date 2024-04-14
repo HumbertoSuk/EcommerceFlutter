@@ -10,11 +10,15 @@ class ForgotPasswordForm extends StatefulWidget {
   _ForgotPasswordFormState createState() => _ForgotPasswordFormState();
 }
 
-class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
+class _ForgotPasswordFormState extends State<ForgotPasswordForm>
+    with ValidationMixin {
   final TextEditingController emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ForgotPasswordController _forgotPasswordController =
       ForgotPasswordController();
+
+  String? emailErrorText; // ErrorText para el correo electrónico
+  bool isButtonEnabled = false; // Estado del botón
 
   @override
   void dispose() {
@@ -32,23 +36,41 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           CustomTextField(
             hintText: 'Correo Electrónico',
             controller: emailController,
-            onChanged: (_) => setState(() {}),
-            errorText: !Validations.isEmailValid(emailController.text)
-                ? 'Por favor ingrese un correo electrónico válido'
-                : null,
+            onChanged: (_) => setState(() {
+              emailErrorText = null; // Reiniciar el mensaje de error
+              updateButtonState();
+            }),
+            // Validación del correo electrónico.
+            errorText: emailErrorText,
           ),
           const SizedBox(height: 20),
           CustomButton(
             text: 'Recuperar Contraseña',
-            onPressed: Validations.isEmailValid(emailController.text)
-                ? () => _forgotPasswordController.resetPassword(
-                      context,
-                      emailController.text,
-                    )
-                : null,
+            onPressed: isButtonEnabled ? () => resetPassword() : null,
           ),
         ],
       ),
+    );
+  }
+
+  // Método para actualizar el estado del botón
+  void updateButtonState() {
+    setState(() {
+      if (emailController.text.isNotEmpty &&
+          !isEmailValid(emailController.text)) {
+        emailErrorText = 'Por favor ingrese un correo electrónico válido';
+      } else {
+        emailErrorText = null;
+      }
+      isButtonEnabled = emailErrorText == null;
+    });
+  }
+
+  // Método para resetear la contraseña
+  void resetPassword() {
+    _forgotPasswordController.resetPassword(
+      context,
+      emailController.text,
     );
   }
 }
