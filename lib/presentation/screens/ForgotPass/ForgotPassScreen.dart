@@ -1,3 +1,4 @@
+import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provder.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,6 +11,8 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final snackbarProvider = SnackbarProvider();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recuperar Contraseña'),
@@ -23,7 +26,9 @@ class ForgotPasswordScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
-          child: ForgotPasswordForm(),
+          child: ForgotPasswordForm(
+            snackbarProvider: snackbarProvider,
+          ),
         ),
       ),
     );

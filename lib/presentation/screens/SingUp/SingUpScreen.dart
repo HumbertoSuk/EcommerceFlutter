@@ -1,3 +1,4 @@
+import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provder.dart';
 import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/presentation/widgets/slideMenu/slide_menu.dart';
 import 'package:app_lenses_commerce/presentation/widgets/forms/register_form.dart';
@@ -11,12 +12,14 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
+    final snackbarProvider =
+        SnackbarProvider(); // Instancia del SnackbarProvider
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register Vision plus'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             GoRouter.of(context).go('/');
           },
@@ -25,9 +28,9 @@ class RegisterScreen extends StatelessWidget {
       drawer: SideMenu(
         scaffoldKey: scaffoldKey,
       ),
-      body: const SafeArea(
+      body: SafeArea(
         child: SingleChildScrollView(
-          child: RegisterForm(),
+          child: RegisterForm(snackbarProvider: snackbarProvider),
         ),
       ),
     );

@@ -1,8 +1,8 @@
+import 'package:app_lenses_commerce/config/initializeFirebase.dart';
 import 'package:app_lenses_commerce/config/routes/routers.dart';
 import 'package:app_lenses_commerce/config/theme/themeApp.dart';
 import 'package:app_lenses_commerce/presentation/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
@@ -14,11 +14,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Inicializa Firebase
     return FutureBuilder(
-      future: _initializeFlutterFire(),
+      future: FirebaseInitializer.initializeFirebase(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return _buildSplashScreen();
+          return const SplashScreen();
         } else if (snapshot.hasError) {
           return _buildErrorScreen(snapshot.error.toString());
         } else {
@@ -40,47 +41,36 @@ class MainApp extends StatelessWidget {
     });
   }
 
-  Widget _buildSplashScreen() {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const SplashScreen(),
-    );
-  }
-
   Widget _buildErrorScreen(String errorMessage) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: ErrorScreen(errorMessage: errorMessage),
     );
   }
-
-  Future<void> _initializeFlutterFire() async {
-    try {
-      await Firebase.initializeApp();
-    } catch (e) {
-      print('Error initializing Firebase: $e');
-      throw e;
-    }
-  }
 }
 
+// SplashScreen que se muestra durante la inicialización de Firebase
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
+    return const Directionality(
+      textDirection: TextDirection.ltr,
+      child: Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }
 }
 
+// ErrorScreen que se muestra cuando hay un error durante la inicialización de Firebase
 class ErrorScreen extends StatelessWidget {
   final String errorMessage;
 
-  const ErrorScreen({required this.errorMessage});
+  const ErrorScreen({Key? key, required this.errorMessage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

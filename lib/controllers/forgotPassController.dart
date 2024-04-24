@@ -1,30 +1,25 @@
-import 'package:app_lenses_commerce/presentation/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
 
 class ForgotPasswordController {
-  Future<void> resetPassword(BuildContext context, String email) async {
-    final scaffoldContext = context;
+  Future<Map<String, dynamic>> resetPassword(String email) async {
+    // Obtener una instancia de FirebaseAuth
     final FirebaseAuth auth = FirebaseAuth.instance;
 
     try {
+      // Enviar un correo electrónico para restablecer la contraseña
       await auth.sendPasswordResetEmail(email: email);
-      SnackBarUtils.showCustomSnackBar(
-        scaffoldContext,
-        'Se ha enviado un correo para restablecer la contraseña',
-        duration: const Duration(seconds: 3),
-      );
 
-      //Redirigir a la raiz
-      GoRouter.of(scaffoldContext).go('/');
+      // Si se envía el correo exitosamente, devolver la estructura de datos indicando éxito y un mensaje
+      return {
+        'success': true,
+        'message': 'Se ha enviado un correo para restablecer la contraseña',
+      };
     } catch (e) {
-      SnackBarUtils.showCustomSnackBar(
-        scaffoldContext,
-        'Error:  $e',
-        duration: const Duration(seconds: 3),
-      );
+      // Si ocurre algún error durante el proceso, devolver un  la estructura de datos indicando falla y un mensaje de error
+      return {
+        'success': false,
+        'message': 'Error: $e',
+      };
     }
   }
 }

@@ -8,8 +8,10 @@ class SnackBarUtils {
   }) {
     final snackBar = SnackBar(
       content: Text(message),
-      duration: duration ?? const Duration(seconds: 3),
-      backgroundColor: Theme.of(context).snackBarTheme.backgroundColor,
+      duration: duration ??
+          const Duration(
+              seconds:
+                  5), // Utilizamos el valor predeterminado de 5 segundos si es null
       behavior: SnackBarBehavior.floating,
     );
 

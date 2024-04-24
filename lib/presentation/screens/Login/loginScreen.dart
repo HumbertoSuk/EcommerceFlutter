@@ -1,6 +1,6 @@
+import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provder.dart';
 import 'package:app_lenses_commerce/presentation/widgets/forms/login_form.dart';
 import 'package:flutter/material.dart';
-import 'package:app_lenses_commerce/presentation/widgets/slideMenu/slide_menu.dart';
 
 class LoginScreen extends StatelessWidget {
   static const String nameScreen = 'LoginScreen';
@@ -9,18 +9,17 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scaffoldKey = GlobalKey<ScaffoldState>();
+    final snackbarProvider = SnackbarProvider(); //instancia de provider
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login Vision plus'),
       ),
-      drawer: SideMenu(
-        scaffoldKey: scaffoldKey,
-      ),
-      body: const SafeArea(
+      body: SafeArea(
         child: SingleChildScrollView(
-          child: LoginFormState(),
+          child: LoginFormState(
+            snackbarProvider: snackbarProvider,
+          ),
         ),
       ),
     );

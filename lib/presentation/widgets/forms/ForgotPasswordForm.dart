@@ -1,10 +1,14 @@
 import 'package:app_lenses_commerce/controllers/forgotPassController.dart';
+import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provder.dart';
 import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/presentation/widgets/widgets.dart';
 import 'package:app_lenses_commerce/validation/validation.dart';
+import 'package:go_router/go_router.dart';
 
 class ForgotPasswordForm extends StatefulWidget {
-  const ForgotPasswordForm({Key? key}) : super(key: key);
+  final SnackbarProvider snackbarProvider;
+  const ForgotPasswordForm({Key? key, required this.snackbarProvider})
+      : super(key: key);
 
   @override
   _ForgotPasswordFormState createState() => _ForgotPasswordFormState();
@@ -67,10 +71,19 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
   }
 
   // Método para resetear la contraseña
-  void resetPassword() {
-    _forgotPasswordController.resetPassword(
-      context,
-      emailController.text,
-    );
+  resetPassword() async {
+    final result =
+        await _forgotPasswordController.resetPassword(emailController.text);
+
+    resetPasswordCallback(result['success'], result['message']);
+  }
+
+  resetPasswordCallback(bool isSuccess, String message) {
+    if (isSuccess) {
+      widget.snackbarProvider.showSnackbar(context, message);
+      GoRouter.of(context).go('/');
+    } else {
+      widget.snackbarProvider.showSnackbar(context, message);
+    }
   }
 }

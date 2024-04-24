@@ -1,31 +1,30 @@
-import 'package:app_lenses_commerce/controllers/loginController.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:app_lenses_commerce/controllers/loginController.dart';
 import 'package:app_lenses_commerce/validation/validation.dart';
 import 'package:app_lenses_commerce/presentation/widgets/widgets.dart';
+import 'package:go_router/go_router.dart';
+import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provder.dart';
 
 class LoginFormState extends StatefulWidget {
-  const LoginFormState({Key? key}) : super(key: key);
+  final SnackbarProvider snackbarProvider;
+
+  const LoginFormState({Key? key, required this.snackbarProvider})
+      : super(key: key);
 
   @override
   _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginFormState> with ValidationMixin {
-  // Controladores de texto
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  // Notifier para ver si esta lleno los campos
-  final ValueNotifier<bool> isFilled = ValueNotifier<bool>(false);
-
-  // Visibilidad del pass
+  final LoginController _loginController = LoginController();
   bool isPasswordVisible = false;
 
-  final LoginController _loginController = LoginController();
+  final ValueNotifier<bool> isFilled = ValueNotifier<bool>(false);
 
-  String? emailErrorText; // ErrorText para el correo electrónico
-  String? passwordErrorText; // ErrorText para la contraseña
+  String? emailErrorText;
+  String? passwordErrorText;
 
   @override
   void dispose() {
@@ -43,53 +42,36 @@ class _LoginFormState extends State<LoginFormState> with ValidationMixin {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo de la aplicación.
             const LogoWidget(
               width: 150,
               height: 150,
               imagePath: 'assets/images/logo.png',
             ),
             const SizedBox(height: 20),
-
-            // Campo de texto para el correo electrónico.
             CustomTextField(
               hintText: 'Correo Electrónico',
               obscureText: false,
               controller: emailController,
-              onChanged: (_) => _checkFields(),
-              // Validación del correo electrónico.
+              onChanged: (_) => _validateFields(),
               errorText: emailErrorText,
             ),
             const SizedBox(height: 20),
-
-            // Campo de texto para la contraseña.
             CustomTextField(
               hintText: 'Contraseña',
               obscureText: !isPasswordVisible,
               controller: passwordController,
-              onChanged: (_) => _checkFields(),
-              // Validación de la contraseña.
+              onChanged: (_) => _validateFields(),
               errorText: passwordErrorText,
             ),
-            const SizedBox(height: 5),
-
-            // Botón para cambiar la visibilidad de la contraseña.
+            const SizedBox(height: 20),
             PasswordVisibilityButton(
               isPasswordVisible: isPasswordVisible,
               onPressed: _togglePasswordVisibility,
             ),
             const SizedBox(height: 20),
-
-            // Botón para iniciar sesión.
             CustomButton(
               text: 'Iniciar Sesión',
-              onPressed: isFilled.value
-                  ? () => _loginController.signInWithEmailAndPassword(
-                        context: context,
-                        email: emailController.text.trim(),
-                        password: passwordController.text.trim(),
-                      )
-                  : null,
+              onPressed: isFilled.value ? _signIn : null,
             ),
             const SizedBox(height: 10),
             CustomButton(
@@ -111,8 +93,7 @@ class _LoginFormState extends State<LoginFormState> with ValidationMixin {
     );
   }
 
-  //Verificar campos de texto
-  void _checkFields() {
+  void _validateFields() {
     setState(() {
       emailErrorText = isEmailValid(emailController.text)
           ? null
@@ -120,7 +101,7 @@ class _LoginFormState extends State<LoginFormState> with ValidationMixin {
 
       passwordErrorText = isPasswordValid(passwordController.text)
           ? null
-          : 'La contraseña no puede estar vacia';
+          : 'La contraseña no puede estar vacía';
 
       final isValidEmail = emailErrorText == null;
       final isValidPassword = passwordErrorText == null;
@@ -134,7 +115,24 @@ class _LoginFormState extends State<LoginFormState> with ValidationMixin {
     });
   }
 
-  // Método para alternar la visibilidad de la contraseña.
+  _signIn() async {
+    final result = await _loginController.signInWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+
+    _signInCallback(result['success'], result['message']);
+  }
+
+  _signInCallback(bool isSuccess, String message) {
+    if (isSuccess) {
+      widget.snackbarProvider.showSnackbar(context, message);
+      GoRouter.of(context).go('/Home');
+    } else {
+      widget.snackbarProvider.showSnackbar(context, message);
+    }
+  }
+
   void _togglePasswordVisibility() {
     setState(() {
       isPasswordVisible = !isPasswordVisible;

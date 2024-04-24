@@ -1,10 +1,15 @@
-import 'package:app_lenses_commerce/validation/validation.dart';
-import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/presentation/widgets/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provder.dart';
+import 'package:app_lenses_commerce/validation/validation.dart';
 import 'package:app_lenses_commerce/controllers/register_controller.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({Key? key}) : super(key: key);
+  final SnackbarProvider snackbarProvider;
+
+  const RegisterForm({Key? key, required this.snackbarProvider})
+      : super(key: key);
 
   @override
   _RegisterFormState createState() => _RegisterFormState();
@@ -16,16 +21,6 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
-
-  // Inicializa los controladores de texto en el initState
-  @override
-  void initState() {
-    super.initState();
-    nameController.addListener(_validateFields);
-    passwordController.addListener(_validateFields);
-    confirmPasswordController.addListener(_validateFields);
-    emailController.addListener(_validateEmail);
-  }
 
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
@@ -101,13 +96,38 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
     );
   }
 
-  void _register() {
-    _registerController.register(
-      context: context,
+  _register() async {
+    final result = await _registerController.register(
       name: nameController.text,
       email: emailController.text,
       password: passwordController.text,
     );
+
+    _registrationCallback(
+      result['success'],
+      result['email'],
+      result['errorMessage'],
+    );
+  }
+
+  _registrationCallback(
+    bool isSuccess,
+    String? email,
+    String? errorMessage,
+  ) {
+    if (isSuccess) {
+      widget.snackbarProvider.showSnackbar(
+        context,
+        'Registro exitoso. Se ha enviado un correo de verificación a $email',
+      );
+
+      GoRouter.of(context).go('/');
+    } else {
+      widget.snackbarProvider.showSnackbar(
+        context,
+        'Error durante el registro: $errorMessage',
+      );
+    }
   }
 
   @override
@@ -131,18 +151,13 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
           : 'Debe contener 8 caracteres, números y caracteres especiales';
       confirmPasswordErrorText =
           isConfirmPasswordMatch ? null : 'Las contraseñas no coinciden';
+      emailErrorText = isEmailValid(emailController.text)
+          ? null
+          : 'Correo electrónico inválido';
       isFieldsValid = isNameValid &&
           isEmailValid(emailController.text) &&
           isConfirmPasswordMatch &&
           isPasswordSecure;
-    });
-  }
-
-  void _validateEmail() {
-    setState(() {
-      emailErrorText = isEmailValid(emailController.text)
-          ? null
-          : 'Correo electrónico inválido';
     });
   }
 
