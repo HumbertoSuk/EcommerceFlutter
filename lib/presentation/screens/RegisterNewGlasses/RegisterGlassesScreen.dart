@@ -1,13 +1,13 @@
 import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provider.dart';
+import 'package:app_lenses_commerce/presentation/widgets/forms/add_glasses_form.dart';
 import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/presentation/widgets/slideMenu/slide_menu.dart';
-import 'package:app_lenses_commerce/presentation/widgets/forms/register_form.dart';
 import 'package:go_router/go_router.dart';
 
-class RegisterScreen extends StatelessWidget {
-  static const String nameScreen = 'RegisterScreen';
+class RegisterGlassesScreen extends StatelessWidget {
+  static const String nameScreen = 'RegisterGlassesScreen';
 
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterGlassesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +17,11 @@ class RegisterScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register Vision plus'),
+        title: const Text('Alta de nuevos articulos +'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            GoRouter.of(context).go('/');
+            GoRouter.of(context).go('/Home');
           },
         ),
       ),
@@ -30,7 +30,9 @@ class RegisterScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: RegisterForm(snackbarProvider: snackbarProvider),
+          child: AddGlassesForms(
+            snackbarProvider: snackbarProvider,
+          ),
         ),
       ),
     );

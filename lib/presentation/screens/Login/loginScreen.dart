@@ -1,4 +1,4 @@
-import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provder.dart';
+import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provider.dart';
 import 'package:app_lenses_commerce/presentation/widgets/forms/login_form.dart';
 import 'package:flutter/material.dart';
 

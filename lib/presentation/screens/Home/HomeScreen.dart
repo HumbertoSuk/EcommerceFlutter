@@ -1,5 +1,6 @@
-import 'package:app_lenses_commerce/config/menu/menu_item.dart';
 import 'package:app_lenses_commerce/presentation/widgets/slideMenu/slide_menu.dart';
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,9 +10,18 @@ class HomeScreen extends StatelessWidget {
 
   const HomeScreen({Key? key}) : super(key: key);
 
+//Implementar posteriormente el widget del carousel donde se mostran los productos
+//Provisional.
+
   @override
   Widget build(BuildContext context) {
     final scaffoldKey = GlobalKey<ScaffoldState>();
+    final List<String> images = [
+      'https://devlyn.vtexassets.com/assets/vtex.file-manager-graphql/images/e1104491-9de4-4322-b6ea-df763c51f74e___2967e7b9f44cedcac0cbffab359d074e.jpg',
+      'https://devlyn.vtexassets.com/assets/vtex.file-manager-graphql/images/e1104491-9de4-4322-b6ea-df763c51f74e___2967e7b9f44cedcac0cbffab359d074e.jpg',
+      'https://devlyn.vtexassets.com/assets/vtex.file-manager-graphql/images/e1104491-9de4-4322-b6ea-df763c51f74e___2967e7b9f44cedcac0cbffab359d074e.jpg',
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -24,19 +34,35 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: appMenuItems.length,
-        itemBuilder: (context, index) => _buildMenuList(context, index),
+      body: CarouselSlider(
+        items: images.map((imageUrl) {
+          return Container(
+            margin: EdgeInsets.all(5.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
+            ),
+          );
+        }).toList(),
+        options: CarouselOptions(
+          height: 200.0,
+          enlargeCenterPage: true,
+          autoPlay: true,
+          aspectRatio: 16 / 9,
+          autoPlayCurve: Curves.fastOutSlowIn,
+          enableInfiniteScroll: true,
+          autoPlayAnimationDuration: Duration(milliseconds: 800),
+          viewportFraction: 0.8,
+        ),
       ),
       drawer: SideMenu(
         scaffoldKey: scaffoldKey,
       ),
     );
-  }
-
-  Widget _buildMenuList(BuildContext context, int index) {
-    final menuItem = appMenuItems[index];
-    return _CustomListTitle(menuItem: menuItem);
   }
 
   void _showLogoutConfirmationDialog(BuildContext context) {
@@ -67,29 +93,6 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _CustomListTitle extends StatelessWidget {
-  const _CustomListTitle({
-    required this.menuItem,
-  });
-
-  final MenuItem menuItem;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
-    return ListTile(
-      leading: Icon(menuItem.icon, color: colors.primary),
-      trailing: const Icon(Icons.arrow_forward_ios_rounded),
-      title: Text(menuItem.title),
-      subtitle: Text(menuItem.subtitle),
-      onTap: () {
-        context.push(menuItem.link);
-      },
     );
   }
 }

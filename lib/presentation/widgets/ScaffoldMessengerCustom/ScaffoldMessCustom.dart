@@ -11,7 +11,7 @@ class SnackBarUtils {
       duration: duration ??
           const Duration(
               seconds:
-                  5), // Utilizamos el valor predeterminado de 5 segundos si es null
+                  3), // Utilizamos el valor predeterminado de 3 segundos si es null
       behavior: SnackBarBehavior.floating,
     );
 

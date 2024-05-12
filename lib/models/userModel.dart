@@ -31,7 +31,7 @@ class UserModel {
   String get name => _name;
 
   // Setter para actualizar el nombre del usuario
-  set Name(String newName) {
+  set setName(String newName) {
     _name = newName;
   }
 

@@ -32,7 +32,7 @@ class _SideMenuState extends State<SideMenu> {
         children: [
           Padding(
             padding: EdgeInsets.fromLTRB(28, hasNotch ? 0 : 20, 16, 10),
-            child: const Text('Principales'),
+            child: const Text('Pantalla Principal'),
           ),
           //Editar dependiendo de la sublista e items de la lista
           ...appMenuItems.sublist(0, 1).map(
@@ -45,12 +45,40 @@ class _SideMenuState extends State<SideMenu> {
             padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
             child: Divider(),
           ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(28, 10, 16, 10),
-            child: Text('Mas Opciones'),
+          Padding(
+            padding: EdgeInsets.fromLTRB(28, hasNotch ? 0 : 20, 16, 10),
+            child: const Text('Configuracion de tema'),
           ),
           //Editar dependiendo de la sublista e items de la lista
-          ...appMenuItems.sublist(1).map(
+          ...appMenuItems.sublist(1, 2).map(
+                (item) => NavigationDrawerDestination(
+                  icon: Icon(item.icon),
+                  label: Text(item.title),
+                ),
+              ),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
+            child: Divider(),
+          ),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(28, 10, 16, 10),
+            child: Text('Productos'),
+          ),
+          ...appMenuItems.sublist(2, 4).map(
+                (item) => NavigationDrawerDestination(
+                  icon: Icon(item.icon),
+                  label: Text(item.title),
+                ),
+              ),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(28, 16, 28, 10),
+            child: Divider(),
+          ),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(28, 10, 16, 10),
+            child: Text('General'),
+          ),
+          ...appMenuItems.sublist(4, 5).map(
                 (item) => NavigationDrawerDestination(
                   icon: Icon(item.icon),
                   label: Text(item.title),

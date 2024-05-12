@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/controllers/loginController.dart';
-import 'package:app_lenses_commerce/validation/validation.dart';
+import 'package:app_lenses_commerce/helpers/validation/validation.dart';
 import 'package:app_lenses_commerce/presentation/widgets/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provder.dart';
+import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provider.dart';
 
 class LoginFormState extends StatefulWidget {
   final SnackbarProvider snackbarProvider;
@@ -128,6 +128,8 @@ class _LoginFormState extends State<LoginFormState> with ValidationMixin {
     if (isSuccess) {
       widget.snackbarProvider.showSnackbar(context, message);
       GoRouter.of(context).go('/Home');
+      // Oculta el teclado y mueve la pantalla hacia arriba
+      FocusScope.of(context).unfocus();
     } else {
       widget.snackbarProvider.showSnackbar(context, message);
     }

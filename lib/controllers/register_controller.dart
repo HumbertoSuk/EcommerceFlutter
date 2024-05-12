@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class RegisterController {
   // Método para registrar un nuevo usuario
   //Devuelve un MAP de strings y es dinamico, puede proporcionar flexibilidad en el tipo de dato(int,double, etc)
+
   Future<Map<String, dynamic>> register({
     required String name,
     required String email,

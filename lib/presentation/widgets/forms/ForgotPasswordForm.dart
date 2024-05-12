@@ -1,8 +1,8 @@
 import 'package:app_lenses_commerce/controllers/forgotPassController.dart';
-import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provder.dart';
+import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/presentation/widgets/widgets.dart';
-import 'package:app_lenses_commerce/validation/validation.dart';
+import 'package:app_lenses_commerce/helpers/validation/validation.dart';
 import 'package:go_router/go_router.dart';
 
 class ForgotPasswordForm extends StatefulWidget {
