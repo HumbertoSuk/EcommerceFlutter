@@ -23,7 +23,7 @@ final List<RouteBase> routes = [
   GoRoute(
     path: '/Home',
     name: HomeScreen.nameScreen,
-    builder: (context, state) => const HomeScreen(),
+    builder: (context, state) => HomeScreen(),//SE REMOVIO CONST
   ),
   GoRoute(
     path: '/SignUp',
