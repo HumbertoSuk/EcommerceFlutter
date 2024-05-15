@@ -1,7 +1,9 @@
 // Modelo de representación de los lentes (glasses)
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class GlassesModel {
+  late final String productId; // Nuevo atributo para el ID del producto//kvn
   late String _name;
   late String _description;
   late String _type;
