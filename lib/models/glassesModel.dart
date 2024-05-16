@@ -108,6 +108,24 @@ class GlassesModel {
     );
   }
 
+  factory GlassesModel.fromJson(Map<String, dynamic> json) {
+    return GlassesModel(
+      name: json['name'],
+      description: json['description'],
+      type: json['type'],
+      color: json['color'],
+      material: json['material'],
+      image: json['image'],
+      price: (json['price'] as num)
+          .toDouble(), // Asegúrate de convertir el precio a double
+      stock: json['stock'],
+      minStock: json['minStock'],
+      maxStock: json['maxStock'],
+      available: json['available'],
+      creationDate: json['creationDate'],
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'name': name,

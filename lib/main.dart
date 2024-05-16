@@ -14,14 +14,13 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Inicializa Firebase
     return FutureBuilder(
       future: FirebaseInitializer.initializeFirebase(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const SplashScreen();
         } else if (snapshot.hasError) {
-          return _buildErrorScreen(snapshot.error.toString());
+          return _buildErrorScreen(context, snapshot.error.toString());
         } else {
           return _buildApp();
         }
@@ -32,16 +31,22 @@ class MainApp extends StatelessWidget {
   Widget _buildApp() {
     return Consumer(builder: (context, ref, child) {
       final AppTheme appTheme = ref.watch(themeNotifierProvider);
+
       return MaterialApp.router(
         title: 'Vision +',
         debugShowCheckedModeBanner: false,
         theme: appTheme.getTheme(),
         routerConfig: appRouter,
+        builder: (context, child) {
+          return ProviderScope(
+            child: child!,
+          );
+        },
       );
     });
   }
 
-  Widget _buildErrorScreen(String errorMessage) {
+  Widget _buildErrorScreen(BuildContext context, String errorMessage) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: ErrorScreen(errorMessage: errorMessage),
@@ -49,7 +54,6 @@ class MainApp extends StatelessWidget {
   }
 }
 
-// SplashScreen que se muestra durante la inicialización de Firebase
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -66,7 +70,6 @@ class SplashScreen extends StatelessWidget {
   }
 }
 
-// ErrorScreen que se muestra cuando hay un error durante la inicialización de Firebase
 class ErrorScreen extends StatelessWidget {
   final String errorMessage;
 

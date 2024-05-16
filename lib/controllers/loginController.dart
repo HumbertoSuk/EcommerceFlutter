@@ -68,4 +68,17 @@ class LoginController {
       };
     }
   }
+
+  // Método para cerrar sesión
+  Future<Map<String, dynamic>> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Éxito al cerrar sesión
+      return {'success': true, 'message': 'Cierre de sesión exitoso'};
+    } catch (e) {
+      // Error al cerrar sesión
+      print('Error al cerrar sesión: $e');
+      return {'success': false, 'message': 'Error al cerrar sesión: $e'};
+    }
+  }
 }

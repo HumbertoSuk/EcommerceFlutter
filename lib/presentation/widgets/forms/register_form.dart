@@ -121,6 +121,7 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
         'Registro exitoso. Se ha enviado un correo de verificación a $email',
       );
 
+      // Ir a la pantalla de inicio de sesión después del registro exitoso
       GoRouter.of(context).go('/');
     } else {
       widget.snackbarProvider.showSnackbar(

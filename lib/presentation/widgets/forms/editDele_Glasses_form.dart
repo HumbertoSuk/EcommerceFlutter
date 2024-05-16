@@ -1,5 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
-import 'package:app_lenses_commerce/controllers/editDeleteGlassesController.dart';
+import 'package:app_lenses_commerce/presentation/providers/add-editProduct_Provider.dart';
 import 'package:app_lenses_commerce/presentation/providers/searchEditDele_Provider.dart';
 import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provider.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +26,8 @@ class _EditDeleteGlassesFormState extends State<EditDeleteGlassesForm> {
 
   /// Controlador de la barra de búsqueda para filtrar los lentes por su id
   late TextEditingController _searchController;
+  // ProductProvider instancia;
+  late ProductProvider productProvider;
 
   @override
   void initState() {
@@ -36,6 +38,9 @@ class _EditDeleteGlassesFormState extends State<EditDeleteGlassesForm> {
 
     /// Creamos el stream de lentes que se encarga de obtener los lentes de la base de datos
     _glassesStream = widget.searchControllerProvider.searchGlasses('');
+
+    productProvider =
+        ProductProvider(snackbarProvider: widget.snackbarProvider);
   }
 
   @override
@@ -147,9 +152,9 @@ class _EditDeleteGlassesFormState extends State<EditDeleteGlassesForm> {
                 const SizedBox(width: 4),
                 IconButton(
                   icon: const Icon(Icons.delete),
-
-                  /// Muestra un dialogo de confirmación antes de borrar el lente
-                  onPressed: () => _deleteGlassConfirmation(context, glassId),
+                  onPressed: () {
+                    _deleteGlassConfirmation(context, glassId);
+                  },
                 ),
               ],
             ),
@@ -160,42 +165,69 @@ class _EditDeleteGlassesFormState extends State<EditDeleteGlassesForm> {
   }
 
   void _deleteGlassConfirmation(BuildContext context, String glassId) {
+    bool deleting = false; // Variable para rastrear si se está eliminando
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirmación'),
-        content: const Text('¿Seguro que deseas borrar este lente?'),
-        actions: [
-          TextButton(
-            child: const Text('Cancelar'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          TextButton(
-            child: const Text('Borrar'),
-            onPressed: () => _deleteGlass(context, glassId),
-          ),
-        ],
-      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Confirmación'),
+              content: deleting
+                  ? const SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(),
+                    )
+                  : const Text('¿Seguro que deseas borrar este lente?'),
+              actions: [
+                TextButton(
+                  onPressed:
+                      deleting ? null : () => Navigator.of(context).pop(),
+                  child: const Text('Cancelar'),
+                ),
+                TextButton(
+                  onPressed: deleting
+                      ? null
+                      : () async {
+                          setState(() {
+                            deleting =
+                                true; // Marcar que se está realizando la eliminación
+                          });
+                          await _deleteGlass(context, glassId);
+                          await Future.delayed(
+                              const Duration(milliseconds: 1000));
+                          Navigator.of(context).pop(); // Cerrar el diálogo
+                          FocusScope.of(context).unfocus();
+                        },
+                  child: const Text('Borrar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 
-  void _deleteGlass(BuildContext context, String glassId) async {
-    GlassController glassController =
-        widget.searchControllerProvider.getGlassController();
-
+  Future<void> _deleteGlass(BuildContext context, String glassId) async {
     try {
-      Map<String, dynamic> result = await glassController.deleteGlass(glassId);
+      // Llamar al método para eliminar el producto
+      final result = await productProvider.deleteProduct(
+        context: context,
+        productId: glassId,
+      );
 
-      if (result['success']) {
-        widget.snackbarProvider.showSnackbar(context, result['message']);
-      } else {
-        widget.snackbarProvider.showSnackbar(context, result['message']);
-      }
+      // Mostrar el mensaje utilizando ScaffoldMessenger
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result)),
+      );
     } catch (error) {
-      widget.snackbarProvider.showSnackbar(context, 'Error: $error');
+      // Manejar errores
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $error')),
+      );
     }
-
-    Navigator.of(context).pop();
-    FocusScope.of(context).unfocus();
   }
 }

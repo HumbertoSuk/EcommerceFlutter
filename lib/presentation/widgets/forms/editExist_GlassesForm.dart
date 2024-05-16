@@ -1,12 +1,10 @@
-import 'package:app_lenses_commerce/helpers/listformGlasses.dart';
-import 'package:app_lenses_commerce/presentation/providers/addProduct_Provider.dart';
+import 'package:app_lenses_commerce/presentation/providers/add-editProduct_Provider.dart';
 import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provider.dart';
-import 'package:app_lenses_commerce/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:app_lenses_commerce/presentation/widgets/groupWidgets/GroupWidgetsCustom.dart';
-import 'package:app_lenses_commerce/presentation/widgets/DropDownutton/DropDownButtonCustom.dart';
+import 'package:app_lenses_commerce/presentation/widgets/widgets.dart';
 import 'package:app_lenses_commerce/helpers/validation/validation.dart';
+import 'package:app_lenses_commerce/helpers/listformGlasses.dart';
 
 class EditExistForm extends StatefulWidget {
   final SnackbarProvider snackbarProvider;
@@ -23,15 +21,6 @@ class EditExistForm extends StatefulWidget {
 }
 
 class _EditExistFormState extends State<EditExistForm> with ValidationMixin {
-  @override
-  void initState() {
-    super.initState();
-    productProvider =
-        ProductProvider(snackbarProvider: widget.snackbarProvider);
-    // cargar productos
-    loadProductData(widget.glassId);
-  }
-
   late ProductProvider productProvider;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -43,20 +32,27 @@ class _EditExistFormState extends State<EditExistForm> with ValidationMixin {
   final TextEditingController imageUrlController = TextEditingController();
 
   bool isAvailable = true;
-  DateTime? selectedDate = DateTime.now();
-  TimeOfDay? selectedTime = TimeOfDay.now();
+  DateTime? selectedDateTime = DateTime.now();
 
   // Variables para almacenar los mensajes de error de validación
-  String? nameError = '';
-  String? priceError = '';
-  String? stockError = '';
-  String? stockMinError = '';
-  String? stockMaxError = '';
-  String? errorDescription = '';
-  String? imageUrlError = '';
-  DateTime? selectedDateTime = DateTime.now();
+  String? nameError;
+  String? priceError;
+  String? stockError;
+  String? stockMinError;
+  String? stockMaxError;
+  String? errorDescription;
+  String? imageUrlError;
   // Variable para habilitar o deshabilitar el botón de crear producto
   bool isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    productProvider =
+        ProductProvider(snackbarProvider: widget.snackbarProvider);
+    // Cargar productos
+    loadGlassesData(widget.glassId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -289,7 +285,7 @@ class _EditExistFormState extends State<EditExistForm> with ValidationMixin {
   // Construir botón para crear un nuevo producto
   Widget _buildCreateProductButton() {
     return CustomButton(
-      onPressed: isButtonEnabled ? _updateProduct : null,
+      onPressed: isButtonEnabled ? _updateGlasses : null,
       text: 'Editar Producto',
     );
   }
@@ -372,45 +368,6 @@ class _EditExistFormState extends State<EditExistForm> with ValidationMixin {
     });
   }
 
-  // Método para limpiar el formulario
-  void _clearForm() {
-    setState(() {
-      _clearFields();
-      _resetFormState();
-    });
-  }
-
-  // Método para limpiar los campos
-  void _clearFields() {
-    nameController.clear();
-    descriptionController.clear();
-    materialController.clear();
-    priceController.clear();
-    stockController.clear();
-    stockMinController.clear();
-    stockMaxController.clear();
-    imageUrlController.clear();
-  }
-
-// Método para restablecer el estado del formulario
-  void _resetFormState() {
-    isAvailable = true;
-    selectedDate = DateTime.now();
-    selectedTime = TimeOfDay.now();
-    _resetFormErrors();
-    isButtonEnabled = false;
-  }
-
-// Método auxiliar para restablecer los errores
-  void _resetFormErrors() {
-    nameError = null;
-    priceError = null;
-    stockError = null;
-    stockMinError = null;
-    stockMaxError = null;
-    errorDescription = null;
-  }
-
   // Método auxiliar para mostrar el selector de fecha y hora
   Future<DateTime?> _showDateTimePicker(BuildContext context) async {
     final initial = DateTime.now();
@@ -445,9 +402,7 @@ class _EditExistFormState extends State<EditExistForm> with ValidationMixin {
   }
 
   // Método para actualizar un producto existente
-  void _updateProduct() {
-    final productProvider =
-        ProductProvider(snackbarProvider: widget.snackbarProvider);
+  void _updateGlasses() {
     productProvider.updateProduct(
       productId: widget.glassId,
       name: nameController.text.trim(),
@@ -469,43 +424,29 @@ class _EditExistFormState extends State<EditExistForm> with ValidationMixin {
     resetValidation();
   }
 
-  void loadProductData(String glassId) async {
-    try {
-      final glassesModel =
-          await productProvider.getProductDetails(context, glassId);
-      if (glassesModel != null) {
-        setState(() {
-          nameController.text = glassesModel.name;
-          descriptionController.text = glassesModel.description;
-          materialController.text = glassesModel.material;
-          priceController.text = glassesModel.price.toString();
-          stockController.text = glassesModel.stock.toString();
-          stockMinController.text = glassesModel.minStock.toString();
-          stockMaxController.text = glassesModel.maxStock.toString();
-          imageUrlController.text = glassesModel.image.toString();
-          isAvailable = glassesModel.available;
+  void loadGlassesData(String productId) async {
+    final glasses = await productProvider.getProductDetails(context, productId);
 
-          // Set the selected date and time
-          selectedDateTime = glassesModel.creationDate.toDate();
+    if (glasses != null) {
+      setState(() {
+        nameController.text = glasses.name;
+        descriptionController.text = glasses.description;
+        materialController.text = glasses.material;
+        priceController.text = glasses.price.toString();
+        stockController.text = glasses.stock.toString();
+        stockMinController.text = glasses.minStock.toString();
+        stockMaxController.text = glasses.maxStock.toString();
+        imageUrlController.text = glasses.image.toString();
+        isAvailable = glasses.available;
 
-          // Set the selected glasses type
-          FormOptions.selectedGlassesType = glassesModel.type;
+        selectedDateTime = glasses.creationDate.toDate();
+        FormOptions.selectedGlassesType = glasses.type;
+        FormOptions.selectedColor = glasses.color;
+        FormOptions.selectedMaterial = glasses.material;
 
-          // Set the selected color
-          FormOptions.selectedColor = glassesModel.color;
-
-          // Set the selected material
-          FormOptions.selectedMaterial = glassesModel.material;
-
-          // Update the button state
-          _updateButtonState();
-          resetValidation();
-        });
-      } else {
-        print('No data found for the provided ID.');
-      }
-    } catch (e) {
-      print('Error loading product data: $e');
+        _updateButtonState();
+        resetValidation();
+      });
     }
   }
 

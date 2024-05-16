@@ -4,8 +4,9 @@ import 'package:app_lenses_commerce/presentation/screens/ForgotPass/ForgotPassSc
 import 'package:app_lenses_commerce/presentation/screens/Home/HomeScreen.dart';
 import 'package:app_lenses_commerce/presentation/screens/Login/loginScreen.dart';
 import 'package:app_lenses_commerce/presentation/screens/RegisterNewGlasses/RegisterGlassesScreen.dart';
-import 'package:app_lenses_commerce/presentation/screens/Settings/SettingsScreen.dart';
+import 'package:app_lenses_commerce/presentation/screens/SettingsScreen/SettingsScreen.dart';
 import 'package:app_lenses_commerce/presentation/screens/SingUp/SingUpScreen.dart';
+import 'package:app_lenses_commerce/presentation/screens/detail-Glasses/DetailGlassesScreen.dart';
 import 'package:app_lenses_commerce/presentation/screens/themeChanger/themeChanger.dart';
 import 'package:go_router/go_router.dart';
 
@@ -56,6 +57,14 @@ final List<RouteBase> routes = [
     builder: (context, state) {
       final glassId = state.uri.queryParameters['id'] ?? '';
       return EditGlassesScreen(glassId: glassId);
+    },
+  ),
+  GoRoute(
+    path: '/detail-glasses',
+    name: DetailScreen.nameScreen,
+    builder: (context, state) {
+      final productId = state.uri.queryParameters['productId'] ?? '';
+      return DetailScreen(productId: productId);
     },
   ),
 ];
