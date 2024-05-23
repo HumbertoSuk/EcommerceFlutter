@@ -21,7 +21,8 @@ class HomeScreen extends StatelessWidget {
             icon:
                 const Icon(Icons.shopping_cart), // Icono del carrito de compras
             onPressed: () {
-              // Aqui Agrega aquí la lógica para abrir la pantalla del carrito de compras
+              // Navegar a la pantalla del carrito al hacer clic en el ícono del carrito
+              GoRouter.of(context).go('/Carrito_Screen');
             },
           ),
           IconButton(
