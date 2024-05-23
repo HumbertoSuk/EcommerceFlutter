@@ -18,10 +18,38 @@ class MenuItem {
 
 const appMenuItems = <MenuItem>[
   MenuItem(
+    title: "Home",
+    subtitle: "Pantalla principal de la tienda",
+    link: "/Home",
+    nameScreen: "HomeScreen",
+    icon: Icons.home,
+  ),
+  MenuItem(
     title: "Cambiar Tema",
-    subtitle: "cambiar el tema de la app",
+    subtitle: "Cambiar el tema de la app",
     link: "/theme-changer",
     nameScreen: "ThemeChangeScreen",
     icon: Icons.palette,
-  )
+  ),
+  MenuItem(
+    title: "Añadir lentes",
+    subtitle: "Añadir nuevos lentes al catálogo",
+    link: "/add-lenses",
+    nameScreen: "AddLensesScreen",
+    icon: Icons.add,
+  ),
+  MenuItem(
+    title: "Editar/Eliminar lentes",
+    subtitle: "Editar o eliminar información de lentes existentes",
+    link: "/edit-delete-lenses",
+    nameScreen: "EditDeleteLensesScreen",
+    icon: Icons.edit,
+  ),
+  MenuItem(
+    title: "Todas las opciones",
+    subtitle: "Opciones",
+    link: "/Settings",
+    nameScreen: "SettingsScreen",
+    icon: Icons.settings_input_component_outlined,
+  ),
 ];
