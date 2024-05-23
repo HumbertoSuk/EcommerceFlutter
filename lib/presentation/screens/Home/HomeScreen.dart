@@ -18,6 +18,13 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Home'),
         actions: [
           IconButton(
+            icon:
+                const Icon(Icons.shopping_cart), // Icono del carrito de compras
+            onPressed: () {
+              // Agrega aquí la lógica para abrir la pantalla del carrito de compras
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
               _showLogoutConfirmationDialog(context);
