@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/presentation/widgets/forms/detail_form.dart';
 import 'package:app_lenses_commerce/presentation/providers/glassesHomeProvider.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -18,16 +17,16 @@ class DetailScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Expanded(
+         /* Expanded(
             child: DetailForm(
-              productId: productId,
+             productId: productId,
               addToCart: (int quantity, String productId) {
                 // Llama al método addToCart del provider para agregar el producto al carrito.
                 Provider.of<GlassesHomeProvider>(context, listen: false)
                     .addToCart(productId, quantity);
               },
             ),
-          ),
+          ),*/
         ],
       ),
       floatingActionButton: FloatingActionButton(
