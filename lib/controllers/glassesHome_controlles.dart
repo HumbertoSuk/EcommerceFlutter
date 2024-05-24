@@ -99,44 +99,4 @@ class GlassesHomeController {
       return {};
     }
   }
-  /*
-  Future<void> addToCart(String productId, int quantity) async {
-  try {
-    // Consulta el documento en Firestore utilizando el ID del producto.
-    final DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
-        .collection('glasses')
-        .doc(productId)
-        .get();
-
-    // Verifica si el documento existe.
-    if (docSnapshot.exists) {
-      // Obtiene el stock actual del producto.
-      final int currentStock = docSnapshot.get('stock');
-
-      // Verifica si hay suficiente stock para agregar al carrito.
-      if (currentStock >= quantity) {
-        // Agrega el producto al carrito en Firestore (implementar esta parte según la estructura de tu base de datos).
-        // Por ejemplo, puedes tener una colección 'cart' donde cada documento representa un usuario y contiene los productos en su carrito.
-        // Aquí, puedes agregar lógica para actualizar el carrito del usuario con el nuevo producto y la cantidad.
-        
-        // Por ejemplo:
-        // await FirebaseFirestore.instance.collection('cart').doc(userId).set({
-        //   'productId': productId,
-        //   'quantity': quantity,
-        // }, SetOptions(merge: true));
-
-        print('Producto agregado al carrito.');
-      } else {
-        print('No hay suficiente stock para agregar al carrito.');
-      }
-    } else {
-      print('El producto no existe.');
-    }
-  } catch (error) {
-    // Manejo de errores
-    print('Error al agregar producto al carrito: $error');
-  }
-}
-*/
-
 }

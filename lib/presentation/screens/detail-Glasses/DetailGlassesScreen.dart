@@ -17,16 +17,7 @@ class DetailScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-         /* Expanded(
-            child: DetailForm(
-             productId: productId,
-              addToCart: (int quantity, String productId) {
-                // Llama al método addToCart del provider para agregar el producto al carrito.
-                Provider.of<GlassesHomeProvider>(context, listen: false)
-                    .addToCart(productId, quantity);
-              },
-            ),
-          ),*/
+      
         ],
       ),
       floatingActionButton: FloatingActionButton(

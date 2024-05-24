@@ -43,16 +43,4 @@ class GlassesHomeProvider extends ChangeNotifier {
       return {};
     }
   }
-  /*
-  Future<void> addToCart(String productId, int quantity) async {
-  try {
-    // Llama al método correspondiente en el controlador para agregar el producto al carrito.
-    await _homeController.addToCart(productId, quantity);
-  } catch (error) {
-    // Manejo de errores
-    print('Error en addToCart del provider: $error');
-    throw error;
-  }
-}*/
-
 }
