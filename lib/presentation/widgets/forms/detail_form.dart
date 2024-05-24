@@ -212,35 +212,25 @@ class _DetailFormState extends State<DetailForm> {
   }
 
   // Widget para el botón "Agregar al carrito"
- // Widget para el botón "Agregar al carrito"
-Widget _buildAddToCartButton(
-  int stock,
-  String productId,
-  Function(int quantity, String productId) addToCart,
-) {
-  return Center(
-    child: ElevatedButton(
-      onPressed: stock > 0
-          ? () {
-              // Verificar si hay stock disponible antes de agregar al carrito
-              addToCart(_quantity, productId);
-            }
-          : null,
-      style: ElevatedButton.styleFrom(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-        elevation: 5.0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
+  Widget _buildAddToCartButton(int stock) {
+    return Center(
+      child: ElevatedButton(
+        onPressed: null // Implementar la función para agregar al carrito
+        ,
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+        ),
+        child: const Text(
+          'Agregar al carrito',
+          style: TextStyle(fontSize: 18.0),
         ),
       ),
-      child: Text(
-        'Agregar al carrito',
-        style: const TextStyle(fontSize: 18.0),
-      ),
-    ),
-  );
-}
+    );
+  }
 
   // Método para mostrar un diálogo de error con un mensaje personalizado
   void _showErrorDialog(String message) {
