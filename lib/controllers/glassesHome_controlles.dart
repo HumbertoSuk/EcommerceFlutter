@@ -99,6 +99,7 @@ class GlassesHomeController {
       return {};
     }
   }
+  /*
   Future<void> addToCart(String productId, int quantity) async {
   try {
     // Consulta el documento en Firestore utilizando el ID del producto.
@@ -136,5 +137,6 @@ class GlassesHomeController {
     print('Error al agregar producto al carrito: $error');
   }
 }
+*/
 
 }

@@ -43,6 +43,7 @@ class GlassesHomeProvider extends ChangeNotifier {
       return {};
     }
   }
+  /*
   Future<void> addToCart(String productId, int quantity) async {
   try {
     // Llama al método correspondiente en el controlador para agregar el producto al carrito.
@@ -52,6 +53,6 @@ class GlassesHomeProvider extends ChangeNotifier {
     print('Error en addToCart del provider: $error');
     throw error;
   }
-}
+}*/
 
 }
