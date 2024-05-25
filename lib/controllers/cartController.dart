@@ -1,10 +1,10 @@
-import 'package:app_lenses_commerce/models/CPModel.dart';
 import 'package:flutter/material.dart';
+import 'package:app_lenses_commerce/models/CPModel.dart';
 
-class CartProvider extends ChangeNotifier {
+class CartController with ChangeNotifier {
   final Map<String, List<CartItem>> _userCarts = {};  // Map para almacenar carritos por usuario
 
-  List<CartItem> getItems(String userId) => _userCarts[userId] ?? [];
+  List<CartItem> get items => _userCarts.values.expand((cart) => cart).toList(); // Getter para obtener todos los items de todos los carritos
 
   // Agregar un producto al carrito
   void addItem(CartItem item) {

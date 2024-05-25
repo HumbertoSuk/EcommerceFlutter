@@ -1,15 +1,15 @@
-import 'package:app_lenses_commerce/controllers/carrito_Controller.dart';
 import 'package:app_lenses_commerce/models/CPModel.dart';
-import 'package:flutter/material.dart';
-import 'package:app_lenses_commerce/presentation/providers/glassesHomeProvider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_lenses_commerce/models/glassesModel.dart';
+import 'package:app_lenses_commerce/presentation/providers/cartProvider.dart';
+import 'package:app_lenses_commerce/presentation/providers/glassesHomeProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
 class DetailForm extends StatefulWidget {
   final String productId;
 
-  // Constructor for DetailForm widget
   const DetailForm({Key? key, required this.productId}) : super(key: key);
 
   @override
@@ -210,7 +210,8 @@ class _DetailFormState extends State<DetailForm> {
       child: ElevatedButton(
         onPressed: (stock > 0 && user != null)
             ? () {
-                final cartProvider = Provider.of<CartProvider>(context, listen: false);
+final cartProvider = context.read<CartProvider>();
+
                 final cartItem = CartItem(
                   productId: _productData['productId'],
                   product: GlassesModel.fromJson(_productData),
@@ -254,8 +255,7 @@ class _DetailFormState extends State<DetailForm> {
       },
     );
   }
-
-  void _showStockErrorDialog() {
+void _showStockErrorDialog() {
     showDialog(
       context: context,
       builder: (context) {
@@ -275,3 +275,5 @@ class _DetailFormState extends State<DetailForm> {
     );
   }
 }
+
+ 
