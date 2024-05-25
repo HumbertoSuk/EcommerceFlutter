@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 class CarritoScreen extends StatelessWidget {
   const CarritoScreen({Key? key}) : super(key: key);
+  static const String nameScreen = 'Carrito_Screen';
 
   @override
   Widget build(BuildContext context) {
