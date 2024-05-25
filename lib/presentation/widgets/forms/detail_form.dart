@@ -210,7 +210,7 @@ class _DetailFormState extends State<DetailForm> {
       child: ElevatedButton(
         onPressed: (stock > 0 && user != null)
             ? () {
-final cartProvider = context.read<CartProvider>();
+                final cartProvider = context.read<CartProvider>();
 
                 final cartItem = CartItem(
                   productId: _productData['productId'],
@@ -219,6 +219,13 @@ final cartProvider = context.read<CartProvider>();
                   quantity: _quantity,
                 );
                 cartProvider.addItem(cartItem);
+
+                // Mostrar el mensaje al usuario
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Producto agregado al carrito'),
+                  ),
+                );
               }
             : null,
         style: ElevatedButton.styleFrom(
@@ -255,13 +262,15 @@ final cartProvider = context.read<CartProvider>();
       },
     );
   }
-void _showStockErrorDialog() {
+
+  void _showStockErrorDialog() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Error'),
-          content: const Text('La cantidad seleccionada supera el stock disponible'),
+          content:
+              const Text('La cantidad seleccionada supera el stock disponible'),
           actions: [
             TextButton(
               onPressed: () {
@@ -275,5 +284,3 @@ void _showStockErrorDialog() {
     );
   }
 }
-
- 

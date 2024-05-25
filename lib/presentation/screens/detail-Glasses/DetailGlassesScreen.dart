@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/presentation/widgets/forms/detail_form.dart';
-import 'package:app_lenses_commerce/presentation/providers/glassesHomeProvider.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class DetailScreen extends StatelessWidget {
@@ -17,7 +16,9 @@ class DetailScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-      
+          Expanded(
+            child: DetailForm(productId: productId),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
