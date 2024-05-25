@@ -38,7 +38,7 @@ class CarritoScreen extends StatelessWidget {
       trailing: IconButton(
         icon: Icon(Icons.delete),
         onPressed: () {
-          // Llama al método removeItem del CartProvider para eliminar este producto del carrito
+          //// Llama al método removeItem del CartProvider para eliminar este producto del carrito
           cartProvider.removeItem(item.userId, item.productId);
         },
       ),
