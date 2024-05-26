@@ -1,3 +1,5 @@
+import 'package:app_lenses_commerce/presentation/providers/notification_provider.dart';
+import 'package:app_lenses_commerce/presentation/providers/userRoleProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/controllers/loginController.dart';
 import 'package:app_lenses_commerce/helpers/validation/validation.dart';
@@ -6,13 +8,19 @@ import 'package:go_router/go_router.dart';
 import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provider.dart';
 
 class LoginFormState extends StatefulWidget {
+  final UserRoleNotifier roleProvider;
   final SnackbarProvider snackbarProvider;
 
-  const LoginFormState({Key? key, required this.snackbarProvider})
-      : super(key: key);
+  const LoginFormState({
+    Key? key,
+    required this.roleProvider,
+    required this.snackbarProvider,
+  }) : super(key: key);
 
   @override
   _LoginFormState createState() => _LoginFormState();
+
+  static void handleNotificationData(Map<String, dynamic> notificationData) {}
 }
 
 class _LoginFormState extends State<LoginFormState> with ValidationMixin {
@@ -25,12 +33,20 @@ class _LoginFormState extends State<LoginFormState> with ValidationMixin {
 
   String? emailErrorText;
   String? passwordErrorText;
+  final userRole = GlobalVariables.userRole;
+  late NotificationProvider _notificationProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _notificationProvider =
+        NotificationProvider(context, widget.snackbarProvider);
+    _notificationProvider.initNotification();
+  }
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    isFilled.dispose();
+    _notificationProvider.dispose(); // Liberar recursos
     super.dispose();
   }
 
@@ -71,7 +87,7 @@ class _LoginFormState extends State<LoginFormState> with ValidationMixin {
             const SizedBox(height: 20),
             CustomButton(
               text: 'Iniciar Sesión',
-              onPressed: isFilled.value ? _signIn : null,
+              onPressed: isFilled.value ? () => _signIn(context) : null,
             ),
             const SizedBox(height: 10),
             CustomButton(
@@ -115,11 +131,24 @@ class _LoginFormState extends State<LoginFormState> with ValidationMixin {
     });
   }
 
-  _signIn() async {
+  _signIn(BuildContext context) async {
     final result = await _loginController.signInWithEmailAndPassword(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
     );
+
+    if (result['success']) {
+      final userRole = result['userRole']; // Obtener el rol del resultado
+      try {
+        GlobalVariables.userRole = userRole;
+
+        // Actualizar el rol utilizando el proveedor
+        final roleProvider = UserRoleNotifier();
+        final newRoleProvider = roleProvider.copyWith(userRole);
+      } catch (e) {
+        print('Error al convertir el rol a entero: $e');
+      }
+    }
 
     _signInCallback(result['success'], result['message']);
   }

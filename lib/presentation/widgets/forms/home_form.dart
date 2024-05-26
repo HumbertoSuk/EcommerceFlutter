@@ -176,16 +176,6 @@ class HomeForm extends ConsumerWidget {
           // Construye y muestra la imagen del producto
           child: _buildProductImage(product),
         ),
-        // Posiciona el ícono del carrito de compras en la esquina inferior derecha de la imagen
-        const Positioned(
-          bottom: 5,
-          right: 5,
-          // Botón de icono que representa el carrito de compras
-          child: IconButton(
-            icon: Icon(Icons.shopping_cart),
-            onPressed: null, //Deshabilitado hasta implementar el carrito
-          ),
-        ),
       ],
     );
   }

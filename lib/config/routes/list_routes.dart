@@ -1,13 +1,4 @@
-import 'package:app_lenses_commerce/presentation/screens/Edit-Delet/EditDeleteScreen.dart';
-import 'package:app_lenses_commerce/presentation/screens/EditGlasses/EditGlassesScreen.dart';
-import 'package:app_lenses_commerce/presentation/screens/ForgotPass/ForgotPassScreen.dart';
-import 'package:app_lenses_commerce/presentation/screens/Home/HomeScreen.dart';
-import 'package:app_lenses_commerce/presentation/screens/Login/loginScreen.dart';
-import 'package:app_lenses_commerce/presentation/screens/RegisterNewGlasses/RegisterGlassesScreen.dart';
-import 'package:app_lenses_commerce/presentation/screens/SettingsScreen/SettingsScreen.dart';
-import 'package:app_lenses_commerce/presentation/screens/SingUp/SingUpScreen.dart';
-import 'package:app_lenses_commerce/presentation/screens/detail-Glasses/DetailGlassesScreen.dart';
-import 'package:app_lenses_commerce/presentation/screens/themeChanger/themeChanger.dart';
+import 'package:app_lenses_commerce/presentation/screens/Screens.dart';
 import 'package:go_router/go_router.dart';
 
 final List<RouteBase> routes = [

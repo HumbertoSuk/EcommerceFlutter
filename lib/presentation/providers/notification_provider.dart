@@ -1,59 +1,112 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:app_lenses_commerce/models/push_message.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provider.dart';
 
-final notificationProvider =
-    ChangeNotifierProvider<NotificationProvider>((ref) {
-  return NotificationProvider();
-});
+class NotificationProvider {
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  final StreamController<PushMessage> mensaggesPushNotification =
+      StreamController<PushMessage>.broadcast();
+  final SnackbarProvider _snackbarProvider;
+  final BuildContext context; // Agrega el contexto aquí
 
-class NotificationProvider extends ChangeNotifier {
-  late FirebaseMessaging _firebaseMessaging;
-  late String _token;
-
-  NotificationProvider() {
-    _firebaseMessaging = FirebaseMessaging.instance;
-
-    _initializeMessaging();
+  NotificationProvider(this.context, this._snackbarProvider) {
+    initNotification();
   }
 
-  void _initializeMessaging() {
-    try {
-      FirebaseMessaging.onBackgroundMessage(
-          _onBackgroundMessage); // Registra el método para manejar mensajes en segundo plano
+  void initNotification() async {
+    await _messaging.requestPermission();
+    final token = await _messaging.getToken();
+    print("Token FCM actual: $token");
 
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        _handleMessage(message);
-      });
+    // Configura los manejadores de mensajes
+    FirebaseMessaging.onMessage.listen(handleMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(handleLaunch);
+    FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
+  }
 
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        _handleMessage(message);
-      });
+  static Future<void> _handleBackgroundMessage(RemoteMessage message) async {
+    print("Handling a background message: ${message.messageId}");
+  }
 
-      FirebaseMessaging.instance
-          .getInitialMessage()
-          .then((RemoteMessage? message) {
-        if (message != null) {
-          _handleMessage(message);
-        }
-      });
-    } catch (e) {
-      print('Error al inicializar Firebase Messaging: $e');
+  void handleMessage(RemoteMessage message) {
+    final notificationData = message.notification;
+    if (notificationData != null) {
+      final title = notificationData.title ?? '';
+      final body = notificationData.body ?? '';
+      final imageUrl = _getImageUrl(message);
+      final data = message.data;
+
+      print("Notificación recibida:");
+      print("Título: $title");
+      print("Cuerpo: $body");
+      print("Datos: $data");
+      if (imageUrl != null) {
+        print("URL de la imagen: $imageUrl");
+      }
+
+      // Verificar si el StreamController está cerrado antes de agregar un evento
+      if (!mensaggesPushNotification.isClosed) {
+        // Convierte la notificación en un objeto PushMessage
+        final pushMessage = PushMessage(
+          messageId: message.messageId ?? '',
+          title: title,
+          body: body,
+          sentDate: DateTime.now(),
+          image: imageUrl,
+          data: data,
+        );
+
+        // Agrega la notificación al stream
+        mensaggesPushNotification.add(pushMessage);
+
+        // Mostrar la notificación como un Snackbar
+        _showSnackbarWithNotification(title, body);
+
+        // Redirige a otra página si es necesario
+      } else {
+        print("El StreamController está cerrado, no se puede agregar eventos.");
+      }
     }
   }
 
-  void _handleMessage(RemoteMessage message) {
-    print('Mensaje recibido: ${message.notification?.body}');
-    // Puedes agregar lógica adicional aquí según tus necesidades
+  void handleLaunch(RemoteMessage message) {
+    handleMessage(message);
   }
 
-  Future<String> getToken() async {
-    _token = await _firebaseMessaging.getToken() ?? "";
-    return _token;
+  String? _getImageUrl(RemoteMessage message) {
+    final notificationData = message.notification;
+    if (notificationData != null) {
+      if (Platform.isAndroid) {
+        return notificationData.android?.imageUrl;
+      } else if (Platform.isIOS) {
+        return notificationData.apple?.imageUrl;
+      }
+    }
+    return null;
   }
 
-  Future<void> _onBackgroundMessage(RemoteMessage message) async {
-    print('Mensaje en segundo plano recibido: ${message.notification?.body}');
-    // Agrega aquí tu lógica para manejar el mensaje en segundo plano
+  void _showSnackbarWithNotification(String title, String body) {
+    _snackbarProvider.showCustomSnackbar(context, title, body);
+  }
+
+  Map<String, dynamic>? getNotificationData(RemoteMessage message) {
+    final notificationData = message.notification;
+    if (notificationData != null) {
+      final data = message.data;
+      return {
+        'title': notificationData.title ?? '',
+        'body': notificationData.body ?? '',
+        'imageUrl': _getImageUrl(message),
+        'data': data,
+      };
+    }
+    return null;
+  }
+
+  void dispose() {
+    mensaggesPushNotification.close(); // Cierra el stream controller
   }
 }

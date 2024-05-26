@@ -1,3 +1,4 @@
+import 'package:app_lenses_commerce/presentation/providers/notification_provider.dart';
 import 'package:app_lenses_commerce/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provider.dart';
@@ -30,6 +31,15 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
   String? emailErrorText;
 
   final RegisterController _registerController = RegisterController();
+  late NotificationProvider _notificationProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _notificationProvider =
+        NotificationProvider(context, widget.snackbarProvider);
+    _notificationProvider.initNotification();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +147,7 @@ class _RegisterFormState extends State<RegisterForm> with ValidationMixin {
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    _notificationProvider.dispose(); // Liberar recursos
     super.dispose();
   }
 

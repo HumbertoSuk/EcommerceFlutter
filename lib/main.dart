@@ -1,11 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_lenses_commerce/config/initializeFirebase.dart';
 import 'package:app_lenses_commerce/config/routes/routers.dart';
 import 'package:app_lenses_commerce/config/theme/themeApp.dart';
 import 'package:app_lenses_commerce/presentation/providers/theme_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const ProviderScope(child: MainApp()));
 }
 
@@ -29,21 +31,17 @@ class MainApp extends StatelessWidget {
   }
 
   Widget _buildApp() {
-    return Consumer(builder: (context, ref, child) {
-      final AppTheme appTheme = ref.watch(themeNotifierProvider);
-
-      return MaterialApp.router(
-        title: 'Vision +',
-        debugShowCheckedModeBanner: false,
-        theme: appTheme.getTheme(),
-        routerConfig: appRouter,
-        builder: (context, child) {
-          return ProviderScope(
-            child: child!,
-          );
-        },
-      );
-    });
+    return Consumer(
+      builder: (context, ref, child) {
+        final AppTheme appTheme = ref.watch(themeNotifierProvider);
+        return MaterialApp.router(
+          title: 'Vision +',
+          debugShowCheckedModeBanner: false,
+          theme: appTheme.getTheme(),
+          routerConfig: appRouter,
+        );
+      },
+    );
   }
 
   Widget _buildErrorScreen(BuildContext context, String errorMessage) {
