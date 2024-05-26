@@ -69,7 +69,7 @@ final List<RouteBase> routes = [
     },
   ),
   GoRoute(
-    path: '/carrito_Screen',
+    path: '/Carrito_Screen',
     name: CarritoScreen.nameScreen,
     builder: (context, state) => const CarritoScreen(),
   ),

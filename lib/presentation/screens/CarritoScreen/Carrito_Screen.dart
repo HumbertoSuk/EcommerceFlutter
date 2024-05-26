@@ -14,10 +14,10 @@ class CarritoScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Carrito de Compras'),
+        title: const Text('Carrito de Compras'),
       ),
       body: cartItems.isEmpty
-          ? Center(child: Text('El carrito está vacío'))
+          ? const Center(child: Text('El carrito está vacío'))
           : ListView.builder(
               itemCount: cartItems.length,
               itemBuilder: (context, index) {
