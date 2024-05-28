@@ -14,7 +14,7 @@ class FormOptions {
     "Futurista",
   ]; // opciones para el dropdown de tipo de gafas
   static String selectedGlassesType =
-      availableGlassesTypes[0].toString(); // tipo preseleccionado
+      availableGlassesTypes.first; // tipo preseleccionado
 
   // Opciones de colores de gafas
   static List<String> availableColors = [
@@ -32,8 +32,7 @@ class FormOptions {
     "Transparente",
     "Multicolor",
   ]; // opciones de colores disponibles
-  static String selectedColor =
-      availableColors[0].toString(); // color preseleccionado
+  static String selectedColor = availableColors.first; // color preseleccionado
 
   // Opciones de materiales de gafas
   static List<String> availableMaterials = [

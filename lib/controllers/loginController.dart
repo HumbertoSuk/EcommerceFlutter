@@ -1,7 +1,30 @@
-import 'package:app_lenses_commerce/models/userModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginController {
+  // Método asincrónico para obtener el rol del usuario logueado.
+  Future<int?> getUserRole(String email) async {
+    try {
+      // Acceder a Firestore y buscar el documento del usuario utilizando su correo electrónico
+      final userDoc =
+          await FirebaseFirestore.instance.collection('users').doc(email).get();
+
+      // Verificar si el documento existe y contiene el campo 'role'
+      if (userDoc.exists && userDoc.data()!.containsKey('role')) {
+        // Obtener el valor del campo 'role' del documento
+        final userRole = userDoc.get('role');
+        return userRole;
+      } else {
+        // Si el documento no existe o no contiene el campo 'role'
+        return null;
+      }
+    } catch (e) {
+      // Manejar errores
+      print('Error al obtener el rol del usuario: $e');
+      return null;
+    }
+  }
+
   // Método asincrónico para iniciar sesión con correo electrónico y contraseña.
   Future<Map<String, dynamic>> signInWithEmailAndPassword({
     required String email,
@@ -14,54 +37,35 @@ class LoginController {
         password: password,
       );
 
-      // Crear un objeto UserModel a partir del usuario de Firebase
-      final userModel = UserModel.fromFirebaseUser(userCredential.user!);
+      final user = userCredential.user;
 
-      // Verificar si el usuario está autenticado y si su correo electrónico está verificado
-      if (userModel.isAuthenticated() && userModel.isEmailVerified()) {
-        //  devolver un mensaje de bienvenida
-        return {
-          'success': true,
-          'message': '¡Bienvenido, ${userModel.name}!',
-        };
+      if (user != null) {
+        // Obtener el rol del usuario logueado
+        final userRole = await getUserRole(user.email!);
+
+        if (userRole != null) {
+          // Devolver el rol junto con el mensaje de bienvenida
+          return {
+            'success': true,
+            'message': '¡Bienvenido, ${user.displayName}!',
+            'userRole': userRole,
+          };
+        } else {
+          // Si no se puede obtener el rol del usuario
+          return {
+            'success': false,
+            'message': 'No se pudo obtener el rol del usuario.',
+          };
+        }
       } else {
-        // Si el usuario no está autenticado o su correo electrónico no está verificado
+        // Si no se puede obtener el usuario
         return {
           'success': false,
-          'message':
-              'Por favor, verifica tu correo electrónico para iniciar sesión.',
-        };
-      }
-    } on FirebaseAuthException catch (e) {
-      // Capturar errores específicos de FirebaseAuth
-      final errorMessage = e.toString();
-      if (errorMessage.contains('credential is incorrect')) {
-        return {
-          'success': false,
-          'message': 'Contraseña o usuario incorrectos.',
-        };
-      } else if (errorMessage
-          .contains('blocked all requests from this device')) {
-        return {
-          'success': false,
-          'message':
-              'El dispositivo fue bloqueado por actividad sospechosa, inténtelo más tarde o intente cambiar de contraseña',
-        };
-      } else if (errorMessage.contains('email_not_verified')) {
-        return {
-          'success': false,
-          'message':
-              'Por favor, verifica tu correo electrónico para iniciar sesión.',
-        };
-      } else {
-        // Capturar otros errores de FirebaseAuth
-        return {
-          'success': false,
-          'message': 'Error al iniciar sesión: $e',
+          'message': 'No se pudo obtener el usuario.',
         };
       }
     } catch (e) {
-      // Capturar otros errores
+      // Capturar errores
       return {
         'success': false,
         'message': 'Error al iniciar sesión: $e',

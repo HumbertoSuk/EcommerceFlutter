@@ -18,14 +18,6 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Home'),
         actions: [
           IconButton(
-            icon:
-                const Icon(Icons.shopping_cart), // Icono del carrito de compras
-            onPressed: () {
-              // Navegar a la pantalla del carrito al hacer clic en el ícono del carrito
-              GoRouter.of(context).go('/Carrito_Screen');
-            },
-          ),
-          IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
               _showLogoutConfirmationDialog(context);

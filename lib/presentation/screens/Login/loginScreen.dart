@@ -1,4 +1,5 @@
 import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provider.dart';
+import 'package:app_lenses_commerce/presentation/providers/userRoleProvider.dart';
 import 'package:app_lenses_commerce/presentation/widgets/forms/login_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final snackbarProvider = SnackbarProvider(); //instancia de provider
+    final roleProvider = UserRoleNotifier();
 
     return Scaffold(
       appBar: AppBar(
@@ -20,6 +22,7 @@ class LoginScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: LoginFormState(
             snackbarProvider: snackbarProvider,
+            roleProvider: roleProvider,
           ),
         ),
       ),

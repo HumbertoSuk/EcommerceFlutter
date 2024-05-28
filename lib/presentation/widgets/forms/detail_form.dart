@@ -1,14 +1,10 @@
-import 'package:app_lenses_commerce/models/CPModel.dart';
-import 'package:app_lenses_commerce/models/glassesModel.dart';
-import 'package:app_lenses_commerce/presentation/providers/cartProvider.dart';
-import 'package:app_lenses_commerce/presentation/providers/glassesHomeProvider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:app_lenses_commerce/presentation/providers/glassesHomeProvider.dart';
 
 class DetailForm extends StatefulWidget {
   final String productId;
 
+  // Constructor for DetailForm widget
   const DetailForm({Key? key, required this.productId}) : super(key: key);
 
   @override
@@ -18,7 +14,8 @@ class DetailForm extends StatefulWidget {
 class _DetailFormState extends State<DetailForm> {
   late Map<String, dynamic> _productData = {};
   int _quantity = 1;
-  bool _isLoading = false;
+  bool _isLoading =
+      false; // Variable para rastrear si se están cargando los datos
 
   @override
   void initState() {
@@ -28,26 +25,32 @@ class _DetailFormState extends State<DetailForm> {
 
   void _fetchProduct() async {
     setState(() {
-      _isLoading = true;
+      _isLoading =
+          true; // Establecer isLoading como true al iniciar la carga de datos
     });
 
     try {
       final provider = GlassesHomeProvider();
       await provider.fetchLensTypes();
 
+      // Verificar si lensTypes no está vacío antes de intentar obtener los productos
       if (provider.lensTypes.isNotEmpty) {
+        // Obtener el producto para el productId actual
         final productData = await provider.getProductById(widget.productId);
         setState(() {
           _productData = productData;
         });
       } else {
+        // Manejar adecuadamente el caso donde no hay tipos de lentes disponibles
         _showErrorDialog('No hay tipos de lentes disponibles');
       }
     } catch (e) {
+      // Manejo de errores
       _showErrorDialog('Error al obtener productos: $e');
     } finally {
       setState(() {
-        _isLoading = false;
+        _isLoading =
+            false; // Establecer isLoading como false después de completar la carga de datos
       });
     }
   }
@@ -57,7 +60,7 @@ class _DetailFormState extends State<DetailForm> {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const CircularProgressIndicator() // Mostrar un indicador de carga si se están cargando los datos
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -67,12 +70,13 @@ class _DetailFormState extends State<DetailForm> {
                 const SizedBox(height: 24.0),
                 _buildQuantitySelector(_productData['stock']),
                 const SizedBox(height: 24.0),
-             /*   _buildAddToCartButton(context, _productData['stock']),*/
+                _buildAddToCartButton(_productData['stock']),
               ],
             ),
     );
   }
 
+  // Widget para mostrar la imagen del producto
   Widget _buildProductImage(String? imageUrl) {
     return Center(
       child: Container(
@@ -104,6 +108,7 @@ class _DetailFormState extends State<DetailForm> {
     );
   }
 
+  // Widget para mostrar una imagen de error si no se puede cargar la imagen del producto
   Widget _buildErrorImage() {
     return Image.asset(
       'assets/images/no_image_error.png',
@@ -111,6 +116,7 @@ class _DetailFormState extends State<DetailForm> {
     );
   }
 
+  // Widget para mostrar los detalles del producto
   Widget _buildProductDetails(Map<String, dynamic> productData) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,6 +148,7 @@ class _DetailFormState extends State<DetailForm> {
     );
   }
 
+  // Widget para construir un detalle del producto
   Widget _buildProductDetailText(String title, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,6 +169,7 @@ class _DetailFormState extends State<DetailForm> {
     );
   }
 
+  // Widget para seleccionar la cantidad de productos a agregar al carrito
   Widget _buildQuantitySelector(int stock) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -202,31 +210,13 @@ class _DetailFormState extends State<DetailForm> {
       ],
     );
   }
-/*
-  Widget _buildAddToCartButton(BuildContext context, int stock) {
-    final user = FirebaseAuth.instance.currentUser;
+
+  // Widget para el botón "Agregar al carrito"
+  Widget _buildAddToCartButton(int stock) {
     return Center(
       child: ElevatedButton(
-        onPressed: (stock > 0 && user != null)
-            ? () {
-                final cartProvider = context.read<CartProvider>();
-
-                final cartItem = CartItem(
-                  productId: _productData['productId'],
-                  product: GlassesModel.fromJson(_productData),
-                  userId: user.uid,
-                  quantity: _quantity,
-                );
-                cartProvider.addItem(cartItem);
-
-                // Mostrar el mensaje al usuario
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Producto agregado al carrito'),
-                  ),
-                );
-              }
-            : null,
+        onPressed: null // Implementar la función para agregar al carrito
+        ,
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           elevation: 5.0,
@@ -241,7 +231,8 @@ class _DetailFormState extends State<DetailForm> {
       ),
     );
   }
-*/
+
+  // Método para mostrar un diálogo de error con un mensaje personalizado
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
@@ -262,6 +253,7 @@ class _DetailFormState extends State<DetailForm> {
     );
   }
 
+  // Método para mostrar un diálogo de error si la cantidad supera el stock disponible
   void _showStockErrorDialog() {
     showDialog(
       context: context,

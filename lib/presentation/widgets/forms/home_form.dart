@@ -76,7 +76,7 @@ class HomeForm extends ConsumerWidget {
     );
   }
 
-  // Construye la lista de productos
+// Construye la lista de productos
   Widget _buildProducts(BuildContext context, GlassesHomeProvider provider,
       List<String> lensTypes) {
     return SizedBox(
@@ -90,8 +90,8 @@ class HomeForm extends ConsumerWidget {
           // Convierte los productos en una lista
           final availableProducts = products.toList();
 
-          // Devuelve un contenedor vacío si no hay productos disponibles para este tipo de lente,
-          // de lo contrario, construye y devuelve un widget que contiene los productos.
+// Devuelve un contenedor vacío si no hay productos disponibles para este tipo de lente,
+// de lo contrario, construye y devuelve un widget que contiene los productos.
           return availableProducts.isEmpty
               ? const SizedBox.shrink() // Contenedor vacío
               : _buildProductColumn(
@@ -165,13 +165,18 @@ class HomeForm extends ConsumerWidget {
     );
   }
 
-  // Imagen del widget de card
+//Imagen del widget de card
   Widget _buildProductImageWidget(Map<String, dynamic> product) {
-    // Utiliza un Stack para superponer la imagen del producto.
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
-      // Construye y muestra la imagen del producto
-      child: _buildProductImage(product),
+    // Utiliza un Stack para superponer la imagen del producto y el ícono del carrito de compras.
+    return Stack(
+      children: [
+        // imagen con bordes redondeados
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+          // Construye y muestra la imagen del producto
+          child: _buildProductImage(product),
+        ),
+      ],
     );
   }
 
@@ -220,7 +225,7 @@ class HomeForm extends ConsumerWidget {
     );
   }
 
-  // Navegar a los detalles del producto utilizando GoRouter
+// Navegar a los detalles del producto utilizando GoRouter
   void _navigateToProductDetails(BuildContext context, String productId) {
     GoRouter.of(context).go('/detail-glasses?productId=$productId');
   }
