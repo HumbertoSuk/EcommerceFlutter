@@ -67,7 +67,7 @@ class _DetailFormState extends State<DetailForm> {
                 const SizedBox(height: 24.0),
                 _buildQuantitySelector(_productData['stock']),
                 const SizedBox(height: 24.0),
-                _buildAddToCartButton(context, _productData['stock']),
+             /*   _buildAddToCartButton(context, _productData['stock']),*/
               ],
             ),
     );
@@ -202,7 +202,7 @@ class _DetailFormState extends State<DetailForm> {
       ],
     );
   }
-
+/*
   Widget _buildAddToCartButton(BuildContext context, int stock) {
     final user = FirebaseAuth.instance.currentUser;
     return Center(
@@ -241,7 +241,7 @@ class _DetailFormState extends State<DetailForm> {
       ),
     );
   }
-
+*/
   void _showErrorDialog(String message) {
     showDialog(
       context: context,

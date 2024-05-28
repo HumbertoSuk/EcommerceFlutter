@@ -1,4 +1,4 @@
-import 'package:app_lenses_commerce/presentation/screens/CarritoScreen/Carrito_Screen.dart';
+import 'package:app_lenses_commerce/presentation/screens/CarritoScreen/cartScreen.dart';
 import 'package:app_lenses_commerce/presentation/screens/Edit-Delet/EditDeleteScreen.dart';
 import 'package:app_lenses_commerce/presentation/screens/EditGlasses/EditGlassesScreen.dart';
 import 'package:app_lenses_commerce/presentation/screens/ForgotPass/ForgotPassScreen.dart';
@@ -69,8 +69,8 @@ final List<RouteBase> routes = [
     },
   ),
   GoRoute(
-    path: '/Carrito_Screen',
-    name: CarritoScreen.nameScreen,
-    builder: (context, state) => const CarritoScreen(),
+    path: '/cartScreen',
+    name: CartScreen.nameScreen,
+    builder: (context, state) =>  CartScreen(),
   ),
 ];

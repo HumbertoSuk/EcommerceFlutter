@@ -1,27 +1,43 @@
-import 'package:app_lenses_commerce/models/CPModel.dart';
-import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/controllers/cartController.dart';
+import 'package:flutter/material.dart';
 
 class CartProvider extends ChangeNotifier {
-  final CartController _cartController = CartController(); // Instancia del controlador de carrito
+  final CartController _cartController;
 
-  List<CartItem> get items => _cartController.items; // Getter para obtener todos los items del carrito
+  // Constructor que inicializa el proveedor con un controlador de carrito
+  CartProvider(this._cartController);
 
-  // Métodos para llamar a las funciones del controlador de carrito
-  void addItem(CartItem item) {
-    _cartController.addItem(item);
+  // Getter para obtener el controlador de carrito
+  CartController get cartController => _cartController;
+
+  // Getter para obtener la lista de productos en el carrito
+  List<String> get products => _cartController.products;
+
+  // Método para agregar un producto al carrito
+  void addToCart(String product) {
+    _cartController.addToCart(product);
     notifyListeners();
   }
 
-  void removeItem(String userId, String productId) {
-    _cartController.removeItem(userId, productId);
+  // Método para eliminar un producto del carrito
+  void removeFromCart(String product) {
+    _cartController.removeFromCart(product);
     notifyListeners();
   }
 
-  void clearCart(String userId) {
-    _cartController.clearCart(userId);
+  // Método para limpiar el carrito
+  void clearCart() {
+    _cartController.clearCart();
     notifyListeners();
   }
 
-  double getTotal(String userId) => _cartController.getTotal(userId);
+  // Método para obtener la cantidad de productos en el carrito
+  int getCartItemCount() {
+    return _cartController.getCartItemCount();
+  }
+
+  // Método para obtener el total del carrito
+  double getTotal() {
+    return _cartController.getTotal();
+  }
 }
