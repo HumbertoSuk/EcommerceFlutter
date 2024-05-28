@@ -6,12 +6,25 @@ import 'package:flutter/material.dart';
 class SnackbarProvider extends ChangeNotifier {
   void showSnackbar(BuildContext context, String message,
       {Duration? duration}) {
+    hideCurrentSnackbar(context); // Cerrar el Snackbar actual
     SnackBarUtils.showCustomSnackBar(context, message, duration: duration);
   }
 
   void showCustomSnackbar(BuildContext context, String title, String body,
       {Duration? duration, IconData? iconData}) {
-    final snackbar = SnackBar(
+    hideCurrentSnackbar(context); // Cerrar el Snackbar actual
+    final snackbar = buildSnackbar(context, title, body,
+        duration: duration, iconData: iconData);
+    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  }
+
+  void hideCurrentSnackbar(BuildContext context) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  }
+
+  SnackBar buildSnackbar(BuildContext context, String title, String body,
+      {Duration? duration, IconData? iconData}) {
+    return SnackBar(
       backgroundColor: Colors.grey[900],
       content: Stack(
         children: [
@@ -36,7 +49,6 @@ class SnackbarProvider extends ChangeNotifier {
         curve: Curves.easeInOut,
       ),
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
   Widget _buildIcon(IconData? iconData) {
@@ -86,10 +98,10 @@ class SnackbarProvider extends ChangeNotifier {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SnackBarAction(
-          label: 'Close',
+          label: 'Cerrar',
           textColor: Colors.white,
           onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            hideCurrentSnackbar(context); // Cerrar el Snackbar actual
           },
         ),
       ),

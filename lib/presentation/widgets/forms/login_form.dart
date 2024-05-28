@@ -9,14 +9,13 @@ import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provi
 
 class LoginFormState extends StatefulWidget {
   final UserRoleNotifier roleProvider;
-  final SnackbarProvider snackbarProvider;
+  final SnackbarProvider snackbarProvider; // Cambiar aquí
 
   const LoginFormState({
     Key? key,
     required this.roleProvider,
-    required this.snackbarProvider,
+    required this.snackbarProvider, // Cambiar aquí
   }) : super(key: key);
-
   @override
   _LoginFormState createState() => _LoginFormState();
 
@@ -45,13 +44,9 @@ class _LoginFormState extends State<LoginFormState> with ValidationMixin {
   }
 
   @override
-  void dispose() {
-    _notificationProvider.dispose(); // Liberar recursos
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(30.0),
@@ -145,9 +140,7 @@ class _LoginFormState extends State<LoginFormState> with ValidationMixin {
         // Actualizar el rol utilizando el proveedor
         final roleProvider = UserRoleNotifier();
         final newRoleProvider = roleProvider.copyWith(userRole);
-      } catch (e) {
-        print('Error al convertir el rol a entero: $e');
-      }
+      } catch (e) {}
     }
 
     _signInCallback(result['success'], result['message']);
@@ -167,5 +160,11 @@ class _LoginFormState extends State<LoginFormState> with ValidationMixin {
     setState(() {
       isPasswordVisible = !isPasswordVisible;
     });
+  }
+
+  @override
+  void dispose() {
+    _notificationProvider.dispose();
+    super.dispose();
   }
 }

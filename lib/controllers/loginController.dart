@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class LoginController {
   // Método asincrónico para obtener el rol del usuario logueado.
@@ -20,7 +21,7 @@ class LoginController {
       }
     } catch (e) {
       // Manejar errores
-      print('Error al obtener el rol del usuario: $e');
+
       return null;
     }
   }
@@ -42,6 +43,12 @@ class LoginController {
       if (user != null) {
         // Obtener el rol del usuario logueado
         final userRole = await getUserRole(user.email!);
+
+        // Obtener el token FCM actual
+        final token = await FirebaseMessaging.instance.getToken();
+
+        // Insertar el token en la colección "TokensPush" si no existe
+        await _addTokenToFirestore(email, token, user.displayName.toString());
 
         if (userRole != null) {
           // Devolver el rol junto con el mensaje de bienvenida
@@ -81,8 +88,32 @@ class LoginController {
       return {'success': true, 'message': 'Cierre de sesión exitoso'};
     } catch (e) {
       // Error al cerrar sesión
-      print('Error al cerrar sesión: $e');
+
       return {'success': false, 'message': 'Error al cerrar sesión: $e'};
     }
+  }
+
+  // Método para agregar el token a la colección "TokensPush" si no existe
+  Future<void> _addTokenToFirestore(
+      String email, String? token, String user) async {
+    try {
+      // Verificar si el token ya existe en la colección
+      final tokenDoc = await FirebaseFirestore.instance
+          .collection('TokensPush')
+          .doc(token)
+          .get();
+
+      if (!tokenDoc.exists) {
+        // Si el token no existe, agregarlo a la colección con el correo electrónico asociado
+        await FirebaseFirestore.instance
+            .collection('TokensPush')
+            .doc(token)
+            .set({
+          'email': email,
+          'token': token,
+          'username': user,
+        });
+      } else {}
+    } catch (e) {}
   }
 }

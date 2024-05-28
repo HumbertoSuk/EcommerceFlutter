@@ -11,7 +11,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final snackbarProvider = SnackbarProvider(); //instancia de provider
+    final snackbarProvider = SnackbarProvider(); // Mover aquí
+
     final roleProvider = UserRoleNotifier();
 
     return Scaffold(
@@ -21,7 +22,7 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: LoginFormState(
-            snackbarProvider: snackbarProvider,
+            snackbarProvider: snackbarProvider, // Pasar aquí
             roleProvider: roleProvider,
           ),
         ),

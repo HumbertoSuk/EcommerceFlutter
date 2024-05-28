@@ -59,7 +59,6 @@ class GlassController {
         return null;
       }
     } catch (error) {
-      print('Error al obtener los datos del lente: $error');
       return null;
     }
   }

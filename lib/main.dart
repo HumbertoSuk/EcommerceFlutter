@@ -35,6 +35,7 @@ class MainApp extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) {
         final AppTheme appTheme = ref.watch(themeNotifierProvider);
+
         return MaterialApp.router(
           title: 'Vision +',
           debugShowCheckedModeBanner: false,

@@ -8,3 +8,4 @@ export 'package:app_lenses_commerce/presentation/screens/SettingsScreen/Settings
 export 'package:app_lenses_commerce/presentation/screens/SingUp/SingUpScreen.dart';
 export 'package:app_lenses_commerce/presentation/screens/detail-Glasses/DetailGlassesScreen.dart';
 export 'package:app_lenses_commerce/presentation/screens/themeChanger/themeChanger.dart';
+export 'package:app_lenses_commerce/presentation/screens/cart/cartScreen.dart';

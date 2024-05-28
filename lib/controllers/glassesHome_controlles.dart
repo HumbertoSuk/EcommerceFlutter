@@ -18,7 +18,7 @@ class GlassesHomeController {
       return lensTypes;
     } catch (error) {
       // Manejo de errores en caso de fallo al obtener los tipos de lentes.
-      print('Error fetching lens types: $error');
+
       return [];
     }
   }
@@ -63,7 +63,7 @@ class GlassesHomeController {
       return productsByLensType;
     } catch (error) {
       // Manejo de errores en caso de fallo al obtener los productos utilizando el modelo.
-      print('Error fetching available products using model: $error');
+
       return {};
     }
   }
@@ -95,7 +95,7 @@ class GlassesHomeController {
       }
     } catch (error) {
       // Manejo de errores
-      print('Error fetching product by ID: $error');
+
       return {};
     }
   }

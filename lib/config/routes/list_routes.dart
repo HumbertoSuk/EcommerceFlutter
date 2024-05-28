@@ -58,4 +58,9 @@ final List<RouteBase> routes = [
       return DetailScreen(productId: productId);
     },
   ),
+  GoRoute(
+    path: '/cart',
+    name: CartScreen.nameScreen,
+    builder: (context, state) => const CartScreen(),
+  ),
 ];

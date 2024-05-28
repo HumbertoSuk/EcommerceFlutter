@@ -1,4 +1,3 @@
-import 'package:app_lenses_commerce/presentation/providers/notification_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class FirebaseInitializer {

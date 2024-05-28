@@ -23,7 +23,7 @@ class GlassesHomeProvider extends ChangeNotifier {
       return lensTypes; // Devuelve la lista de tipos de lentes
     } catch (e) {
       // Manejo de errores en caso de fallo al cargar los tipos de lentes.
-      print('Error al cargar los tipos de lentes: $e');
+
       throw e;
     }
   }
@@ -39,7 +39,7 @@ class GlassesHomeProvider extends ChangeNotifier {
       return await _homeController.getProductById(productId);
     } catch (error) {
       // Manejo de errores
-      print('Error fetching product by ID in provider: $error');
+
       return {};
     }
   }

@@ -66,10 +66,7 @@ class RegisterController {
 
       // Obtener la referencia a la colección "users" y agregar un nuevo documento con el nombre generado
       await _firestore.collection('users').doc(documentName).set(userData);
-
-      print('Usuario agregado a Firestore exitosamente.');
     } catch (e) {
-      print('Error al agregar usuario a Firestore: $e');
       throw e;
     }
   }
