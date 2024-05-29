@@ -14,12 +14,13 @@ class DetailForm extends StatefulWidget {
 class _DetailFormState extends State<DetailForm> {
   late Map<String, dynamic> _productData = {};
   int _quantity = 1;
-  bool _isLoading =
-      false; // Variable para rastrear si se están cargando los datos
+  bool _isLoading = false;
+  late GlassesHomeProvider _glassesHomeProvider; // Proveedor GlassesHomeProvider
 
-  @override
+ @override
   void initState() {
     super.initState();
+    _glassesHomeProvider = GlassesHomeProvider(); // Inicializar el proveedor
     _fetchProduct();
   }
 

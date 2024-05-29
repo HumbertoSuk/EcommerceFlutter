@@ -1,3 +1,5 @@
+import 'package:app_lenses_commerce/models/cartModel.dart';
+import 'package:app_lenses_commerce/models/glassesModel.dart';
 import 'package:app_lenses_commerce/presentation/providers/cartProvider.dart';
 import 'package:app_lenses_commerce/presentation/providers/snackbarMessage_Provider.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +32,7 @@ class CartForm extends ConsumerWidget {
                 itemCount: cartProvider.cartItems.length,
                 itemBuilder: (context, index) {
                   final cartItem = cartProvider.cartItems[index];
-                  return _buildCartItem(cartProvider, cartItem, index);
+                  return _buildCartItem(cartProvider, cartItem);
                 },
               ),
             ),
@@ -38,7 +40,6 @@ class CartForm extends ConsumerWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // Acción para finalizar la compra
                 _completePurchase(context, cartProvider);
               },
               child: const Text('Finalizar Compra'),
@@ -49,34 +50,33 @@ class CartForm extends ConsumerWidget {
     );
   }
 
-  Widget _buildCartItem(
-      CartProvider cartProvider, Map<String, dynamic> cartItem, int index) {
+  Widget _buildCartItem(CartProvider cartProvider, CartModel cartItem) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       child: ListTile(
         leading: _buildCartItemImage(cartItem),
-        title: Text(cartItem['name'] ?? ''),
+        title: Text(cartItem.product.name),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Precio: ${cartItem['price'] ?? ''}'),
-            Text('Cantidad: ${cartItem['quantity'] ?? 1}'),
+            Text('Precio: ${cartItem.price}'),
+            Text('Cantidad: ${cartItem.quantity}'),
           ],
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildRemoveCartItemButton(cartProvider, cartItem, index),
-            _buildAddCartItemButton(cartProvider, cartItem),
+            _buildRemoveCartItemButton(cartProvider, cartItem),
+            _buildAddCartItemButton(cartProvider, cartItem.product),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCartItemImage(Map<String, dynamic> cartItem) {
+  Widget _buildCartItemImage(CartModel cartItem) {
     return Image.network(
-      cartItem['image'] ?? '',
+      cartItem.product.image ?? '',
       width: 50,
       height: 50,
       errorBuilder: (context, error, stackTrace) {
@@ -89,24 +89,21 @@ class CartForm extends ConsumerWidget {
     );
   }
 
-  Widget _buildRemoveCartItemButton(
-      CartProvider cartProvider, Map<String, dynamic> cartItem, int index) {
+  Widget _buildRemoveCartItemButton(CartProvider cartProvider, CartModel cartItem) {
     return IconButton(
       icon: const Icon(Icons.remove_circle_outline),
       onPressed: () {
-        // Remover una unidad del item del carrito
-        cartProvider.removeFromCart(cartItem['productId']);
+        cartProvider.removeFromCart(cartItem.product.name);
       },
     );
   }
 
-  Widget _buildAddCartItemButton(
-      CartProvider cartProvider, Map<String, dynamic> cartItem) {
+  Widget _buildAddCartItemButton(CartProvider cartProvider, GlassesModel product) {
     return IconButton(
       icon: const Icon(Icons.add_circle_outline),
       onPressed: () {
-        // Añadir una unidad del item al carrito
-        cartProvider.addToCart(cartItem);
+cartProvider.addToCart(product,1); // Se asume que la cantidad es 1 por defecto, puedes cambiarlo según sea necesario
+
       },
     );
   }
@@ -175,7 +172,7 @@ class CartForm extends ConsumerWidget {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancelar (ಥ﹏ಥ)'),
+                    child: const Text('Cancelar (￢_￢)'),
                   ),
                   const SizedBox(width: 14),
                   ElevatedButton(

@@ -1,112 +1,40 @@
+import 'package:app_lenses_commerce/controllers/cartController.dart';
+import 'package:app_lenses_commerce/models/cartModel.dart';
+import 'package:app_lenses_commerce/models/glassesModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final cartProviderProvider = ChangeNotifierProvider<CartProvider>((ref) {
-  return CartProvider();
+  return CartProvider(ref);
 });
 
 class CartProvider extends ChangeNotifier {
-  // Ejemplo de datos estáticos, para hacerlo dinámico consulta Firestore y crea BD de carrito por usuario
-  // Cada usuario debe tener su propio carrito
-  final List<Map<String, dynamic>> _cartItems = [
-    {
-      'productId': '1',
-      'name': 'Lentes de Sol',
-      'price': 100.0,
-      'image': 'https://via.placeholder.com/50',
-      'quantity': 1,
-    },
-    {
-      'productId': '2',
-      'name': 'Lentes de Lectura',
-      'price': 50.0,
-      'image': 'https://via.placeholder.com/50',
-      'quantity': 2,
-    },
-    {
-      'productId': '1',
-      'name': 'Lentes de Sol',
-      'price': 100.0,
-      'image': 'https://via.placeholder.com/50',
-      'quantity': 1,
-    },
-    {
-      'productId': '2',
-      'name': 'Lentes de Lectura',
-      'price': 50.0,
-      'image': 'https://via.placeholder.com/50',
-      'quantity': 2,
-    },
-    {
-      'productId': '1',
-      'name': 'Lentes de Sol',
-      'price': 100.0,
-      'image': 'https://via.placeholder.com/50',
-      'quantity': 1,
-    },
-    {
-      'productId': '2',
-      'name': 'Lentes de Lectura',
-      'price': 50.0,
-      'image': 'https://via.placeholder.com/50',
-      'quantity': 2,
-    },
-    {
-      'productId': '1',
-      'name': 'Lentes de Sol',
-      'price': 100.0,
-      'image': 'https://via.placeholder.com/50',
-      'quantity': 1,
-    },
-  ];
+  final CartController _cartController;
+  CartProvider(Ref ref) : _cartController = CartController();
 
-  final double _shippingCost =
-      150.0; // Suponiendo un costo de envío fijo de $10
+  List<CartModel> get cartItems => _cartController.cartItems;
 
-  List<Map<String, dynamic>> get cartItems => _cartItems;
+  double get shippingCost => _cartController.shippingCost;
 
-  double get shippingCost => _shippingCost;
-
-  void addToCart(Map<String, dynamic> product) {
-    final index = _cartItems
-        .indexWhere((item) => item['productId'] == product['productId']);
-    if (index >= 0) {
-      _cartItems[index]['quantity'] += 1;
-    } else {
-      _cartItems.add({...product, 'quantity': 1});
-    }
+  void addToCart(GlassesModel product, int quantity) {
+    _cartController.addToCart(product);
     notifyListeners();
   }
 
-  void removeFromCart(String productId) {
-    final index =
-        _cartItems.indexWhere((item) => item['productId'] == productId);
-    if (index >= 0) {
-      if (_cartItems[index]['quantity'] > 1) {
-        _cartItems[index]['quantity'] -= 1;
-      } else {
-        _cartItems.removeAt(index);
-      }
-    }
+  void removeFromCart(String productName) {
+    _cartController.removeFromCart(productName);
     notifyListeners();
   }
 
   double calculateSubtotal() {
-    return _cartItems.fold(
-        0.0,
-        (sum, item) =>
-            sum + ((item['price'] ?? 0.0) * (item['quantity'] ?? 1)));
+    return _cartController.calculateSubtotal();
   }
 
   double calculateTax() {
-    // Supongamos que hay un impuesto fijo del 16%
-    final subtotal = calculateSubtotal();
-    return subtotal * 0.16;
+    return _cartController.calculateTax();
   }
 
   double calculateTotal() {
-    final subtotal = calculateSubtotal();
-    final tax = calculateTax();
-    return subtotal + tax + _shippingCost;
+    return _cartController.calculateTotal();
   }
 }

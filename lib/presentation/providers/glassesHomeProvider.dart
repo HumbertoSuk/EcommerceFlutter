@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/controllers/glassesHome_controlles.dart';
 
 class GlassesHomeProvider extends ChangeNotifier {
+  
   final GlassesHomeController _homeController = GlassesHomeController();
   List<String> lensTypes =
       []; // Lista para almacenar los tipos de lentes disponibles
