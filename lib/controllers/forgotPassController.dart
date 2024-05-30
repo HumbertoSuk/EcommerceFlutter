@@ -1,10 +1,10 @@
+import 'package:app_lenses_commerce/config/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ForgotPasswordController {
   Future<Map<String, dynamic>> resetPassword(String email) async {
     // Obtener una instancia de FirebaseAuth
-    final FirebaseAuth auth = FirebaseAuth.instance;
-
+    final FirebaseAuth auth = AuthService.authInstance;
     try {
       // Enviar un correo electrónico para restablecer la contraseña
       await auth.sendPasswordResetEmail(email: email);

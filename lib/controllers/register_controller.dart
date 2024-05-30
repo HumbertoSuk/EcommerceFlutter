@@ -1,3 +1,4 @@
+import 'package:app_lenses_commerce/config/auth.dart';
 import 'package:app_lenses_commerce/models/userModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,7 +7,7 @@ class RegisterController {
   // Método para registrar un nuevo usuario
   //Devuelve un MAP de strings y es dinamico, puede proporcionar flexibilidad en el tipo de dato(int,double, etc)
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = AuthService.authInstance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Método para registrar un nuevo usuario

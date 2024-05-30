@@ -67,36 +67,4 @@ class GlassesHomeController {
       return {};
     }
   }
-
-  Future<Map<String, dynamic>> getProductById(String productId) async {
-    try {
-      // Consulta el documento en Firestore utilizando el ID del producto.
-      final DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
-          .collection('glasses')
-          .doc(productId)
-          .get();
-
-      // Verifica si el documento existe.
-      if (docSnapshot.exists) {
-        // Crea una instancia de GlassesModel utilizando el método fromFirestore.
-        final model = GlassesModel.fromFirestore(docSnapshot);
-
-        // Convierte el modelo en un mapa utilizando el método toMap.
-        final data = model.toMap();
-
-        // Agrega el ID del producto al mapa de datos.
-        data['productId'] = docSnapshot.id;
-
-        // Devuelve el mapa de datos del producto.
-        return data;
-      } else {
-        // Si el documento no existe, devuelve un mapa vacío.
-        return {};
-      }
-    } catch (error) {
-      // Manejo de errores
-
-      return {};
-    }
-  }
 }

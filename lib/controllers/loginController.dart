@@ -1,8 +1,10 @@
+import 'package:app_lenses_commerce/config/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class LoginController {
+  final FirebaseAuth _auth = AuthService.authInstance;
   // Método asincrónico para obtener el rol del usuario logueado.
   Future<int?> getUserRole(String email) async {
     try {
@@ -33,7 +35,7 @@ class LoginController {
   }) async {
     try {
       final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+          await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -83,7 +85,7 @@ class LoginController {
   // Método para cerrar sesión
   Future<Map<String, dynamic>> signOut() async {
     try {
-      await FirebaseAuth.instance.signOut();
+      await _auth.signOut();
       // Éxito al cerrar sesión
       return {'success': true, 'message': 'Cierre de sesión exitoso'};
     } catch (e) {

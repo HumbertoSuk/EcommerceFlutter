@@ -1,30 +1,48 @@
-import 'glassesModel.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CartModel {
-  int quantity;
-  double price;
-  GlassesModel product;
+class CartItem {
+  final String productId;
+  final String productName;
+  final double price;
+  final String image;
+  final int quantity;
 
-  CartModel({
-    required this.quantity,
+  CartItem({
+    required this.productId,
+    required this.productName,
     required this.price,
-    required this.product,
+    required this.image,
+    required this.quantity,
   });
 
-  // Método para incrementar la cantidad del producto en el carrito
-  void incrementQuantity() {
-    quantity += 1;
+  Map<String, dynamic> toMap() {
+    return {
+      'productId': productId,
+      'productName': productName,
+      'price': price,
+      'image': image,
+      'quantity': quantity,
+    };
   }
 
-  // Método para decrementar la cantidad del producto en el carrito
-  void decrementQuantity() {
-    if (quantity > 1) {
-      quantity -= 1;
-    }
+  factory CartItem.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return CartItem(
+      productId: doc.id,
+      productName: data['productName'] ?? '',
+      price: (data['price'] ?? 0.0).toDouble(),
+      image: data['image'] ?? '',
+      quantity: (data['quantity'] ?? 0) as int,
+    );
   }
 
-  // Método para calcular el precio total de este producto en el carrito
-  double getTotalPrice() {
-    return price * quantity;
+  CartItem copyWith({required int quantity}) {
+    return CartItem(
+      productId: this.productId,
+      productName: this.productName,
+      price: this.price,
+      image: this.image,
+      quantity: quantity,
+    );
   }
 }

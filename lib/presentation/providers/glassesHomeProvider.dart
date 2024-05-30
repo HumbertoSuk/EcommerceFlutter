@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:app_lenses_commerce/controllers/glassesHome_controlles.dart';
 
 class GlassesHomeProvider extends ChangeNotifier {
-  
   final GlassesHomeController _homeController = GlassesHomeController();
   List<String> lensTypes =
       []; // Lista para almacenar los tipos de lentes disponibles
@@ -33,15 +32,5 @@ class GlassesHomeProvider extends ChangeNotifier {
   List<Map<String, dynamic>> getProductsForLensType(String type) {
     // Retorna los productos disponibles para el tipo de lente especificado, o una lista vacía si no hay productos.
     return availableProductsByLensType[type] ?? [];
-  }
-
-  Future<Map<String, dynamic>> getProductById(String productId) async {
-    try {
-      return await _homeController.getProductById(productId);
-    } catch (error) {
-      // Manejo de errores
-
-      return {};
-    }
   }
 }
